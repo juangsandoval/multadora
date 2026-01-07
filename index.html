@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>⚖️ Cómputo de términos judiciales</title>
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- JS principal -->
+    <script type="module" src="app.js" defer></script>
+</head>
+<body>
+
+<h2>⚖️ Cómputo de términos judiciales</h2>
+
+<form id="formulario">
+
+    <!-- ============================= -->
+    <!-- 1. NOTIFICACIÓN -->
+    <!-- ============================= -->
+    <fieldset>
+        <legend>📢 Notificación</legend>
+
+        <label>
+            Tipo de notificación:
+            <select id="tipoNotificacion">
+                <option value="Estados">Estados</option>
+                <option value="Estrados">Estrados</option>
+                <option value="Ob. Condicional">Ob. Condicional</option>
+            </select>
+        </label>
+
+        <label>
+            Fecha de notificación:
+            <input type="date" id="fechaNotificacion" />
+        </label>
+    </fieldset>
+
+    <!-- ============================= -->
+    <!-- 2. OBLIGACIÓN CONDICIONAL -->
+    <!-- ============================= -->
+    <fieldset>
+        <legend>⏳ Obligación condicional</legend>
+
+        <div class="toggle">
+            <label>
+                <input type="radio" name="modoPlazoCondicional" value="Días" checked />
+                Por días
+            </label>
+            <label>
+                <input type="radio" name="modoPlazoCondicional" value="Fecha" />
+                Por fecha
+            </label>
+        </div>
+
+        <label id="grupoPlazoCondicionalDias">
+            Días hábiles:
+            <input type="number" id="plazoCondicionalDias" value="0" min="0" />
+        </label>
+
+        <label id="grupoPlazoCondicionalFecha" style="display:none;">
+            Fecha límite:
+            <input type="date" id="fechaLimiteCondicional" />
+        </label>
+
+        <label>
+            Fecha en que se cumplió (si aplica):
+            <input type="date" id="fechaCumplidaCondicional" />
+        </label>
+    </fieldset>
+
+    <!-- ============================= -->
+    <!-- 3. CUMPLIMIENTO (DDO) -->
+    <!-- ============================= -->
+    <fieldset>
+        <legend>📅 Cumplimiento (Ddo)</legend>
+
+        <div class="toggle">
+            <label>
+                <input type="radio" name="modoPlazoCumplimiento" value="Días" checked />
+                Por días
+            </label>
+            <label>
+                <input type="radio" name="modoPlazoCumplimiento" value="Fecha" />
+                Por fecha
+            </label>
+        </div>
+
+        <label id="grupoCumplimientoDias">
+            Días hábiles:
+            <input type="number" id="diasCumplimiento" value="15" min="0" />
+        </label>
+
+        <label id="grupoCumplimientoFecha" style="display:none;">
+            Fecha límite:
+            <input type="date" id="fechaLimiteCumplimiento" />
+        </label>
+    </fieldset>
+
+    <!-- ============================= -->
+    <!-- 4. INFORME (DDTE) -->
+    <!-- ============================= -->
+    <fieldset>
+        <legend>📬 Noticia de incumplimiento</legend>
+
+        <label>
+            Días para informar:
+            <input type="number" id="diasInforme" value="30" min="0" />
+        </label>
+
+        <label>
+            Fecha del informe:
+            <input type="date" id="fechaInforme" />
+        </label>
+    </fieldset>
+
+    <!-- ============================= -->
+    <!-- 5. AUTO DE INICIO -->
+    <!-- ============================= -->
+    <fieldset>
+        <legend>📄 Auto de inicio de trámite</legend>
+
+        <label>
+            Fecha del auto:
+            <input type="date" id="fechaAutoInicio" />
+        </label>
+
+        <label>
+            Fecha del estado:
+            <input type="date" id="fechaEstadoAuto" />
+        </label>
+
+        <label>
+            Plazo de acreditación (días hábiles):
+            <input type="number" id="plazoAcreditacion" value="3" min="0" />
+        </label>
+    </fieldset>
+
+    <!-- ============================= -->
+    <!-- 6. AUTOS ADICIONALES -->
+    <!-- ============================= -->
+    <fieldset>
+        <legend>📑 Autos adicionales</legend>
+
+        <div id="autosContainer"></div>
+
+        <button type="button" id="btnAgregarAuto">➕ Añadir auto</button>
+    </fieldset>
+
+    <!-- ============================= -->
+    <!-- BOTÓN -->
+    <!-- ============================= -->
+    <button type="button" id="btnCalcular">⚙️ Calcular</button>
+
+</form>
+
+<hr />
+
+<!-- ============================= -->
+<!-- SALIDA -->
+<!-- ============================= -->
+<div id="salida"></div>
+
+
+<!-- ============================= -->
+<!-- JS AUXILIAR DE UI -->
+<!-- ============================= -->
+<script>
+/* Toggle obligación condicional */
+document.querySelectorAll("input[name='modoPlazoCondicional']").forEach(radio => {
+    radio.addEventListener("change", () => {
+        document.getElementById("grupoPlazoCondicionalDias").style.display =
+            radio.value === "Días" ? "block" : "none";
+        document.getElementById("grupoPlazoCondicionalFecha").style.display =
+            radio.value === "Fecha" ? "block" : "none";
+    });
+});
+
+/* Toggle cumplimiento */
+document.querySelectorAll("input[name='modoPlazoCumplimiento']").forEach(radio => {
+    radio.addEventListener("change", () => {
+        document.getElementById("grupoCumplimientoDias").style.display =
+            radio.value === "Días" ? "block" : "none";
+        document.getElementById("grupoCumplimientoFecha").style.display =
+            radio.value === "Fecha" ? "block" : "none";
+    });
+});
+
+/* Autos adicionales */
+document.getElementById("btnAgregarAuto").addEventListener("click", () => {
+    const cont = document.getElementById("autosContainer");
+    const div = document.createElement("div");
+    div.className = "auto-adicional";
+    div.innerHTML = `
+        <label>Fecha auto:
+            <input type="date" class="fecha-auto" />
+        </label>
+        <label>Fecha estado:
+            <input type="date" class="fecha-estado" />
+        </label>
+        <label>Plazo (días hábiles):
+            <input type="number" class="plazo-auto" value="0" min="0" />
+        </label>
+        <hr />
+    `;
+    cont.appendChild(div);
+});
+</script>
+
+</body>
+</html>
