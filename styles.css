@@ -31,13 +31,16 @@ form {
 .layout{
     display:grid;
     gap: 1rem;
-    pagging: 1rem;
+    padding: 1rem;
 }
 
-.layout-centrado{
-    width:100%;
-    max-width:900px;
+.layout-centrado {
+    grid-template-columns: 1fr;
+    max-width: 900px;
+    margin: 0 auto;
+    jutify-items: center;
 }
+
 
 #preview{
     display:none;
@@ -219,6 +222,7 @@ hr {
         width: 100%;
     }
 }
+
 
 
 
