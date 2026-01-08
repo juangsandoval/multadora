@@ -127,7 +127,11 @@ button {
     border-radius: 4px;
     margin-bottom: 12px;
 }
-
+#btnEliminar {
+    background-color: #2e7d32;
+    color: #900603;
+    font-weight: 600;
+}
 /* ============================= */
 /* Salida de resultados */
 /* ============================= */
@@ -183,3 +187,4 @@ hr {
         width: 100%;
     }
 }
+
