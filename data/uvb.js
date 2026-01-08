@@ -22,7 +22,8 @@
 export const UVB = {
     2023: 10000,
     2024: 10951,
-    2025: 11552
+    2025: 11552,
+    2026: 12110
 };
 
 
@@ -35,3 +36,4 @@ export const UVB = {
 export function obtenerUVB(year) {
     return UVB[year] ?? null;
 }
+
