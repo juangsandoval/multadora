@@ -4,19 +4,21 @@
     <meta charset="UTF-8" />
     <title>⚖️ Cómputo de términos judiciales</title>
 
+    <!========== INDICACIÓN DEL ESTILO CSS=========>
     <link rel="stylesheet" href="styles.css" />
 
-    <!-- JS principal -->
+    <!============INDICACIÓN DEL JS PRINCIPAL===================>
     <script type="module" src="app.js" defer></script>
 </head>
 <body>
 
 <h2>⚖️ Cómputo de términos judiciales</h2>
-
+<!===========FORMULARIO PRINCIPAL======================>
+    
 <form id="formulario">
 
     <!-- ============================= -->
-    <!-- 1. NOTIFICACIÓN -->
+    <!--PRIMER (1) FIELDSET DE NOTIFICACIÓN -->
     <!-- ============================= -->
     <fieldset>
         <legend>📢 Notificación</legend>
@@ -26,7 +28,6 @@
             <select id="tipoNotificacion">
                 <option value="Estados">Estados</option>
                 <option value="Estrados">Estrados</option>
-                <option value="Ob. Condicional">Ob. Condicional</option>
             </select>
         </label>
 
@@ -37,7 +38,7 @@
     </fieldset>
 
     <!-- ============================= -->
-    <!-- 2. OBLIGACIÓN CONDICIONAL -->
+    <!-- SEGUNDO (2) FIELDSET OBLIGACIÓN CONDICIONAL -->
     <!-- ============================= -->
     <fieldset>
         <legend>⏳ Obligación condicional</legend>
@@ -70,7 +71,7 @@
     </fieldset>
 
     <!-- ============================= -->
-    <!-- 3. CUMPLIMIENTO (DDO) -->
+    <!-- TERCER (3) FIELDSET CUMPLIMIENTO (DDO) -->
     <!-- ============================= -->
     <fieldset>
         <legend>📅 Cumplimiento (Ddo)</legend>
@@ -98,7 +99,7 @@
     </fieldset>
 
     <!-- ============================= -->
-    <!-- 4. INFORME (DDTE) -->
+    <!-- CUARTO (4) FIELDSET INFORME (DDTE) -->
     <!-- ============================= -->
     <fieldset>
         <legend>📬 Noticia de incumplimiento</legend>
@@ -115,7 +116,7 @@
     </fieldset>
 
     <!-- ============================= -->
-    <!-- 5. AUTO DE INICIO -->
+    <!-- QUINTO (5) FIELDSET AUTO DE INICIO -->
     <!-- ============================= -->
     <fieldset>
         <legend>📄 Auto de inicio de trámite</legend>
@@ -137,7 +138,7 @@
     </fieldset>
 
     <!-- ============================= -->
-    <!-- 6. AUTOS ADICIONALES -->
+    <!-- SEXTO (6) FIELDSET AUTOS ADICIONALES -->
     <!-- ============================= -->
     <fieldset>
         <legend>📑 Autos adicionales</legend>
@@ -209,3 +210,4 @@ document.getElementById("btnAgregarAuto").addEventListener("click", () => {
 
 </body>
 </html>
+
