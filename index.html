@@ -13,8 +13,11 @@
 <body>
 
 <h2>⚖️ Cómputo de términos judiciales</h2>
-<!===========FORMULARIO PRINCIPAL======================>
+
     
+<!========INICIO DEL GRID CON CLASES========>
+<div class="layout layout-centrado">
+<!===========FORMULARIO PRINCIPAL======================>
 <form id="formulario">
 
     <!-- ============================= -->
@@ -154,7 +157,11 @@
     <button type="button" id="btnCalcular">⚙️ Calcular</button>
 
 </form>
-
+    <aside id="preview">
+        <h3>📄 Previsualización</h3>
+        <p>Aquí aparecerá el resumen del cómputo.</p>
+    </aside>
+</div>    
 <hr />
 
 <!-- ============================= -->
@@ -256,5 +263,6 @@ document.getElementById("btnAgregarAuto").addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
