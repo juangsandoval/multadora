@@ -127,11 +127,12 @@ button {
     border-radius: 4px;
     margin-bottom: 12px;
 }
-#btnEliminar {
+.btn-eliminar-auto {
     background-color: #2e7d32;
-    color: #900603;
+    color: #900606;
     font-weight: 600;
 }
+
 /* ============================= */
 /* Salida de resultados */
 /* ============================= */
@@ -187,4 +188,5 @@ hr {
         width: 100%;
     }
 }
+
 
