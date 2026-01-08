@@ -30,7 +30,8 @@ export const SMLMV = {
     2022: 1000000,
     2023: 1160000,
     2024: 1300000,
-    2025: 1423500
+    2025: 1423500,
+    2026: 1750905
 };
 
 
@@ -43,3 +44,4 @@ export const SMLMV = {
 export function obtenerSMLMV(year) {
     return SMLMV[year] ?? null;
 }
+
