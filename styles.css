@@ -128,8 +128,8 @@ button {
     margin-bottom: 12px;
 }
 .btn-eliminar-auto {
-    background-color: #2e7d32;
-    color: #900606;
+    background-color: #900606;
+    color: #fff;
     font-weight: 600;
 }
 
@@ -188,5 +188,6 @@ hr {
         width: 100%;
     }
 }
+
 
 
