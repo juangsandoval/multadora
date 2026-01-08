@@ -99,7 +99,7 @@
     </fieldset>
 
     <!-- ============================= -->
-    <!-- CUARTO (4) FIELDSET INFORME (DDTE) -->
+    <!-- CUARTO (4) FIELDSET NOTICIA DE INCUMPLIMIENTO (DDTE) -->
     <!-- ============================= -->
     <fieldset>
         <legend>📬 Noticia de incumplimiento</legend>
@@ -164,10 +164,10 @@
 
 
 <!-- ============================= -->
-<!-- JS AUXILIAR DE UI -->
+<!-- JS EMEBEDIDO COMO AUXILIAR DE UI -->
 <!-- ============================= -->
 <script>
-/* Toggle obligación condicional */
+/*====================SCRIPT PARA REALIZAR EL TOGGLE DEL RADIO BUTTON DE OBLIGACIÓN CONDICIONAL===========================*/
 document.querySelectorAll("input[name='modoPlazoCondicional']").forEach(radio => {
     radio.addEventListener("change", () => {
         document.getElementById("grupoPlazoCondicionalDias").style.display =
@@ -177,7 +177,7 @@ document.querySelectorAll("input[name='modoPlazoCondicional']").forEach(radio =>
     });
 });
 
-/* Toggle cumplimiento */
+/*====================SCRIPT PARA REALIZAR EL TOGGLE DEL RADIO BUTTON DEL CUMPLIMIENTO===========================*/
 document.querySelectorAll("input[name='modoPlazoCumplimiento']").forEach(radio => {
     radio.addEventListener("change", () => {
         document.getElementById("grupoCumplimientoDias").style.display =
@@ -187,27 +187,74 @@ document.querySelectorAll("input[name='modoPlazoCumplimiento']").forEach(radio =
     });
 });
 
-/* Autos adicionales */
+/* =============SCRIPR AUXILIAR PARA AGREGAR AUTOS ADICIONALES=======================*/
 document.getElementById("btnAgregarAuto").addEventListener("click", () => {
     const cont = document.getElementById("autosContainer");
-    const div = document.createElement("div");
-    div.className = "auto-adicional";
-    div.innerHTML = `
-        <label>Fecha auto:
-            <input type="date" class="fecha-auto" />
-        </label>
-        <label>Fecha estado:
-            <input type="date" class="fecha-estado" />
-        </label>
-        <label>Plazo (días hábiles):
-            <input type="number" class="plazo-auto" value="0" min="0" />
-        </label>
-        <hr />
-    `;
-    cont.appendChild(div);
+
+    // Contenedor del auto
+    const autoDiv = document.createElement("div");
+    autoDiv.className = "auto-adicional";
+
+    // ===== Fecha auto =====
+    const labelFechaAuto = document.createElement("label");
+    labelFechaAuto.textContent = "Fecha auto: ";
+
+    const inputFechaAuto = document.createElement("input");
+    inputFechaAuto.type = "date";
+    inputFechaAuto.className = "fecha-auto";
+
+    labelFechaAuto.appendChild(inputFechaAuto);
+
+    // ===== Fecha estado =====
+    const labelFechaEstado = document.createElement("label");
+    labelFechaEstado.textContent = "Fecha estado: ";
+
+    const inputFechaEstado = document.createElement("input");
+    inputFechaEstado.type = "date";
+    inputFechaEstado.className = "fecha-estado";
+
+    labelFechaEstado.appendChild(inputFechaEstado);
+
+    // ===== Plazo =====
+    const labelPlazo = document.createElement("label");
+    labelPlazo.textContent = "Plazo (días hábiles): ";
+
+    const inputPlazo = document.createElement("input");
+    inputPlazo.type = "number";
+    inputPlazo.min = 0;
+    inputPlazo.value = 0;
+    inputPlazo.className = "plazo-auto";
+
+    labelPlazo.appendChild(inputPlazo);
+
+    // ===== Botón eliminar =====
+    const btnEliminar = document.createElement("button");
+    btnEliminar.type = "button";
+    btnEliminar.textContent = "🗑 Eliminar";
+    btnEliminar.className = "btn-eliminar-auto";
+
+    btnEliminar.addEventListener("click", () => {
+        autoDiv.remove();
+    });
+
+    // Separador
+    const hr = document.createElement("hr");
+
+    // Agregar todo al contenedor del auto
+    autoDiv.append(
+        labelFechaAuto,
+        labelFechaEstado,
+        labelPlazo,
+        btnEliminar,
+        hr
+    );
+
+    cont.appendChild(autoDiv);
 });
+
 </script>
 
 </body>
 </html>
+
 
