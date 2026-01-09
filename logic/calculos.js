@@ -146,13 +146,17 @@ export function calcularCaso(params) {
     let fechaCumplimiento;
 
     if (modoPlazoCumplimiento === "Días") {
-        fechaCumplimiento =
+        const resultadoCumplimiento =
             sumarDiasHabilesJudiciales(
                 fechaBaseCumplimiento,
                 diasCumplimiento,
                 festivos,
                 FECHAS_CIERRE
-            ).fechaFinal;
+        );
+
+fechaCumplimiento = resultadoCumplimiento.fechaFinal;
+const detalleCumplimiento = resultadoCumplimiento.detalle;
+
     } else {
         if (!fechaLimiteCumplimiento) {
             throw new Error("Debe indicarse la fecha límite de cumplimiento.");
@@ -425,9 +429,11 @@ export function calcularCaso(params) {
         totalDias,
         periodos,
         resolucionesAfectadas: Array.from(resolucionesAfectadas),
-        multa
+        multa,
+        detalleDias: {cumplimiento: detalleCumplimiento}
     };
 }
+
 
 
 
