@@ -144,7 +144,7 @@ export function calcularCaso(params) {
        ================================================= */
 
     let fechaCumplimiento;
-
+    let detalleCumplimiento=[];
     if (modoPlazoCumplimiento === "Días") {
         const resultadoCumplimiento =
             sumarDiasHabilesJudiciales(
@@ -153,9 +153,9 @@ export function calcularCaso(params) {
                 festivos,
                 FECHAS_CIERRE
         );
-
-fechaCumplimiento = resultadoCumplimiento.fechaFinal;
-const detalleCumplimiento = resultadoCumplimiento.detalle;
+        
+        fechaCumplimiento = resultadoCumplimiento.fechaFinal;
+        detalleCumplimiento = resultadoCumplimiento.detalle;
 
     } else {
         if (!fechaLimiteCumplimiento) {
@@ -433,6 +433,7 @@ const detalleCumplimiento = resultadoCumplimiento.detalle;
         detalleDias: {cumplimiento: detalleCumplimiento}
     };
 }
+
 
 
 
