@@ -135,11 +135,7 @@ function renderErroresValidacion(errores) {
 /* =====================================================
    MODULOS
    ===================================================== */
-renderDetalleDias(
-    resultado.detalle,
-    document.getElementById("detalleDias"),
-    dias
-);
+
 
 
 /* =====================================================
@@ -166,6 +162,7 @@ document.getElementById("btnCalcular").addEventListener("click", () => {
         renderErroresValidacion([error.message]);
     }
 });
+
 
 
 
