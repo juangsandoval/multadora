@@ -6,7 +6,8 @@
  *******************************************************/
 
 import { calcularCaso } from "./logic/calculos.js";
-import { validarCaso } from "./logic/validaciones.js"; // ✅ NUEVO
+import { validarCaso } from "./logic/validaciones.js";
+import { renderDetalleDias } from "./modulos/renderDetalleDias.js";
 
 
 /* =====================================================
@@ -131,6 +132,23 @@ function renderErroresValidacion(errores) {
 
 
 /* =====================================================
+   MODULOS
+   ===================================================== */
+const resultado = sumarDiasHabilesJudiciales(
+    fechaBase,
+    dias,
+    festivos,
+    FECHAS_CIERRE
+);
+
+renderDetalleDias(
+    resultado.detalle,
+    document.getElementById("detalleDias"),
+    dias
+);
+
+
+/* =====================================================
    EVENTOS
    ===================================================== */
 
@@ -154,3 +172,4 @@ document.getElementById("btnCalcular").addEventListener("click", () => {
         renderErroresValidacion([error.message]);
     }
 });
+
