@@ -141,6 +141,38 @@ button {
     background-color: #256428;
 }
 
+.tabla-detalle {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+}
+
+.tabla-detalle th,
+.tabla-detalle td {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    text-align: left;
+}
+
+.tabla-detalle th {
+    background: #f5f5f5;
+}
+
+.tabla-detalle tr.habil {
+    background-color: #e8f5e9;
+}
+
+.tabla-detalle tr.no-habil {
+    background-color: #fdecea;
+    color: #8a1c1c;
+}
+
+.tabla-detalle tr.ultimo {
+    font-weight: bold;
+}
+
+
 #btnAgregarAuto {
     background-color: #1976d2;
     color: #fff;
@@ -222,6 +254,7 @@ hr {
         width: 100%;
     }
 }
+
 
 
 
