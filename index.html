@@ -126,12 +126,6 @@
             Fecha del auto:
             <input type="date" id="fechaAutoInicio" />
         </label>
-
-        <label>
-            Fecha del estado:
-            <input type="date" id="fechaEstadoAuto" />
-        </label>
-
         <label>
             Plazo de acreditación (días hábiles):
             <input type="number" id="plazoAcreditacion" value="3" min="0" />
@@ -213,16 +207,6 @@ document.getElementById("btnAgregarAuto").addEventListener("click", () => {
 
     labelFechaAuto.appendChild(inputFechaAuto);
 
-    // ===== Fecha estado =====
-    const labelFechaEstado = document.createElement("label");
-    labelFechaEstado.textContent = "Fecha estado: ";
-
-    const inputFechaEstado = document.createElement("input");
-    inputFechaEstado.type = "date";
-    inputFechaEstado.className = "fecha-estado";
-
-    labelFechaEstado.appendChild(inputFechaEstado);
-
     // ===== Plazo =====
     const labelPlazo = document.createElement("label");
     labelPlazo.textContent = "Plazo (días hábiles): ";
@@ -251,7 +235,6 @@ document.getElementById("btnAgregarAuto").addEventListener("click", () => {
     // Agregar todo al contenedor del auto
     autoDiv.append(
         labelFechaAuto,
-        labelFechaEstado,
         labelPlazo,
         btnEliminar,
         hr
@@ -264,6 +247,7 @@ document.getElementById("btnAgregarAuto").addEventListener("click", () => {
 
 </body>
 </html>
+
 
 
 
