@@ -8,6 +8,7 @@
 import { calcularCaso } from "./logic/calculos.js";
 import { validarCaso } from "./logic/validaciones.js";
 import { renderDetalleDias } from "./modulos/renderDetalleDias.js";
+import { sumarDiasHabilesJudiciales} from "./logic/fechas.js"; 
 
 
 /* =====================================================
@@ -172,4 +173,5 @@ document.getElementById("btnCalcular").addEventListener("click", () => {
         renderErroresValidacion([error.message]);
     }
 });
+
 
