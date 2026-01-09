@@ -206,4 +206,24 @@ export function contarDiasIncluyendoInicioSinSuspension(
 
     return dias;
 }
+/* =====================================================
+   AVERIGUAR EL SIGUIENTE DIA HÁBIL
+   ===================================================== */
+
+export function siguienteDiaHabil(fecha, festivos, fechasCierre) {
+    const f = new Date(fecha);
+    f.setDate(f.getDate() + 1);
+
+    while (
+        fechasCierre.has(f.toISOString().split("T")[0]) ||
+        f.getDay() === 0 ||
+        f.getDay() === 6 ||
+        festivos.has(f.toISOString().split("T")[0])
+    ) {
+        f.setDate(f.getDate() + 1);
+    }
+
+    return f;
+}
+
 
