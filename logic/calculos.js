@@ -73,13 +73,7 @@ export function calcularCaso(params) {
         autosAdicionales            // array de autos
     } = params;
 
-    const fechaEstadoAuto = siguienteDiaHabil(
-        auto.fechaAuto,
-        festivos,
-        FECHAS_CIERRE
-    )
-
-    
+   
     /* -------------------------------------------------
        Validaciones mínimas (las fuertes van en UI)
        ------------------------------------------------- */
@@ -257,15 +251,24 @@ export function calcularCaso(params) {
     /* =================================================
        7. AUTO DE INICIO Y ACREDITACIÓN
        ================================================= */
+    let fechaEstadoAutoCalculada = null;
+
+            if (fechaAutoInicio) {
+                fechaEstadoAutoCalculada = siguienteDiaHabil(
+                    fechaAutoInicio,
+                    festivos,
+                    FECHAS_CIERRE
+                );
+            }
 
     let fechaBaseMulta = fechaCumplimiento;
 
-    if (fechaAutoInicio && fechaEstadoAuto) {
+    if (fechaAutoInicio && fechaEstadoAutoCalculada) {
 
         const diasAuto =
             contarDiasCalendarioSinSuspension(
                 fechaAutoInicio,
-                fechaEstadoAuto,
+                fechaEstadoAutoCalculada,
                 FECHAS_CIERRE
             );
 
@@ -274,13 +277,13 @@ export function calcularCaso(params) {
         periodos.push({
             descripcion: "Auto inicio → Estado",
             inicio: fechaAutoInicio,
-            fin: fechaEstadoAuto
+            fin: fechaEstadoAutoCalculada
         });
 
         if (plazoAcreditacion > 0) {
             const fechaAcreditacion =
                 sumarDiasHabilesJudiciales(
-                    fechaEstadoAuto,
+                    fechaEstadoAutoCalculada,
                     plazoAcreditacion,
                     festivos,
                     FECHAS_CIERRE
@@ -288,7 +291,7 @@ export function calcularCaso(params) {
 
             const diasAcreditacion =
                 contarDiasCalendarioSinSuspension(
-                    fechaEstadoAuto,
+                    fechaEstadoAutoCalculada,
                     fechaAcreditacion,
                     FECHAS_CIERRE
                 );
@@ -297,7 +300,7 @@ export function calcularCaso(params) {
 
             periodos.push({
                 descripcion: "Estado → Acreditación",
-                inicio: fechaEstadoAuto,
+                inicio: fechaEstadoAutoCalculada,
                 fin: fechaAcreditacion
             });
 
@@ -448,6 +451,7 @@ export function calcularCaso(params) {
         detalleDias: {cumplimiento: detalleCumplimiento}
     };
 }
+
 
 
 
