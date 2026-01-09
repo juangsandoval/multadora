@@ -170,7 +170,7 @@ export function calcularCaso(params) {
             FECHAS_CIERRE
         ).fechaFinal;
 
-    let informeEntendido = fechaInforme;
+    let informeEntendido = new Date(fechaInforme);
 
     while (
         FECHAS_CIERRE.has(informeEntendido.toISOString().split("T")[0]) ||
@@ -426,3 +426,4 @@ export function calcularCaso(params) {
         multa
     };
 }
+
