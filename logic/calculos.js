@@ -18,7 +18,7 @@
  *
  * ⚠️ NO maneja UI
  *******************************************************/
-
+import { generarFestivosCO } from "../data/festivos.js";
 import {
     sumarDiasHabilesJudiciales,
     contarDiasCalendarioSinSuspension,
@@ -79,11 +79,12 @@ export function calcularCaso(params) {
     }
 
     /* -------------------------------------------------
-       Festivos (placeholder)
+       Festivos mediante consulta al archivo festivos.js
        -------------------------------------------------
-       ⚠️ Aquí luego se inyectará el Set de festivos CO
     */
-    const festivos = new Set();
+    const anioInicio = fechaNotificacion.getFullYear(); //obtiene el año para la fecha de notificación de la providencia
+    const anioFin = new Date().getFullYear() + 1;
+    const festivos = generarFestivosCO(anioInicio, anioFin);
 
     /* =================================================
        1. EJECUTORIA
@@ -426,4 +427,5 @@ export function calcularCaso(params) {
         multa
     };
 }
+
 
