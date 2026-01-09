@@ -69,11 +69,17 @@ export function calcularCaso(params) {
         fechaLimiteCumplimiento,
         diasInforme,
         fechaAutoInicio,
-        fechaEstadoAuto,
         plazoAcreditacion,
         autosAdicionales            // array de autos
     } = params;
 
+    const fechaEstadoAuto = siguienteDiaHabil(
+        auto.fechaAuto,
+        festivos,
+        FECHAS_CIERRE
+    )
+
+    
     /* -------------------------------------------------
        Validaciones mínimas (las fuertes van en UI)
        ------------------------------------------------- */
@@ -442,6 +448,7 @@ export function calcularCaso(params) {
         detalleDias: {cumplimiento: detalleCumplimiento}
     };
 }
+
 
 
 
