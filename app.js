@@ -135,13 +135,6 @@ function renderErroresValidacion(errores) {
 /* =====================================================
    MODULOS
    ===================================================== */
-const resultado = sumarDiasHabilesJudiciales(
-    fechaBase,
-    dias,
-    festivos,
-    FECHAS_CIERRE
-);
-
 renderDetalleDias(
     resultado.detalle,
     document.getElementById("detalleDias"),
@@ -173,5 +166,6 @@ document.getElementById("btnCalcular").addEventListener("click", () => {
         renderErroresValidacion([error.message]);
     }
 });
+
 
 
