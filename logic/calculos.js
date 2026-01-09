@@ -18,19 +18,13 @@
  *
  * ⚠️ NO maneja UI
  *******************************************************/
-import {
-    sumarDiasHabilesJudiciales,
-    contarDiasCalendarioSinSuspension,
-    detectarCruceSuspension,
-    sumarDias
-} from "./fechas.js";
-
 import { generarFestivosCO } from "../data/festivos.js";
 import {
     sumarDiasHabilesJudiciales,
     contarDiasCalendarioSinSuspension,
     detectarCruceSuspension,
-    sumarDias
+    sumarDias,
+    siguienteDiaHabil
 } from "./fechas.js";
 
 import { calcularMulta } from "./multas.js";
@@ -448,6 +442,7 @@ export function calcularCaso(params) {
         detalleDias: {cumplimiento: detalleCumplimiento}
     };
 }
+
 
 
 
