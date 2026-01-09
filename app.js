@@ -53,7 +53,6 @@ function leerFormulario() {
         fechaInforme: parseFecha(document.getElementById("fechaInforme").value),
 
         fechaAutoInicio: parseFecha(document.getElementById("fechaAutoInicio").value),
-        fechaEstadoAuto: parseFecha(document.getElementById("fechaEstadoAuto").value),
         plazoAcreditacion: parseNumero(document.getElementById("plazoAcreditacion").value),
 
         autosAdicionales: leerAutosAdicionales()
@@ -70,7 +69,6 @@ function leerAutosAdicionales() {
     document.querySelectorAll(".auto-adicional").forEach(div => {
         autos.push({
             fechaAuto: parseFecha(div.querySelector(".fecha-auto").value),
-            fechaEstado: parseFecha(div.querySelector(".fecha-estado").value),
             plazoDias: parseNumero(div.querySelector(".plazo-auto").value)
         });
     });
@@ -166,6 +164,7 @@ document.getElementById("btnDetalle").addEventListener("click", () => {
         document.getElementById("detalleDias")
     );
 });
+
 
 
 
