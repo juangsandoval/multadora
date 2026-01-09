@@ -135,8 +135,10 @@ function renderErroresValidacion(errores) {
 /* =====================================================
    MODULOS
    ===================================================== */
-
-
+renderDetalleDias(
+    resultado.detalleDias.cumplimiento,
+    document.getElementById("detalleDias")
+);
 
 /* =====================================================
    EVENTOS
@@ -162,6 +164,7 @@ document.getElementById("btnCalcular").addEventListener("click", () => {
         renderErroresValidacion([error.message]);
     }
 });
+
 
 
 
