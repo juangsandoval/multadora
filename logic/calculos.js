@@ -22,7 +22,8 @@ import { generarFestivosCO } from "../data/festivos.js";
 import {
     sumarDiasHabilesJudiciales,
     contarDiasCalendarioSinSuspension,
-    detectarCruceSuspension
+    detectarCruceSuspension,
+    sumarDias
 } from "./fechas.js";
 
 import { calcularMulta } from "./multas.js";
@@ -401,8 +402,8 @@ export function calcularCaso(params) {
     /* =================================================
        10. MULTA
        ================================================= */
-
-    const anioMulta = fechaBaseMulta.getFullYear();
+    const fechaRealSancion = sumarDias(fechaCumplimiento, totalDias);
+    const anioMulta = fechaRealSancion.getFullYear();
     const anioUVB = new Date().getFullYear();
 
     const multa = calcularMulta(totalDias, anioMulta, anioUVB);
@@ -427,5 +428,6 @@ export function calcularCaso(params) {
         multa
     };
 }
+
 
 
