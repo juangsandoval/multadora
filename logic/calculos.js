@@ -18,6 +18,13 @@
  *
  * ⚠️ NO maneja UI
  *******************************************************/
+import {
+    sumarDiasHabilesJudiciales,
+    contarDiasCalendarioSinSuspension,
+    detectarCruceSuspension,
+    sumarDias
+} from "./fechas.js";
+
 import { generarFestivosCO } from "../data/festivos.js";
 import {
     sumarDiasHabilesJudiciales,
@@ -52,6 +59,7 @@ const RESOLUCIONES = normalizarResoluciones();
  * @param {Object} params - datos del formulario
  * @returns {Object} resultado estructurado
  */
+
 export function calcularCaso(params) {
 
     const {
@@ -324,73 +332,80 @@ export function calcularCaso(params) {
        8. AUTOS ADICIONALES
        ================================================= */
 
-    autosAdicionales.forEach((auto, index) => {
+   autosAdicionales.forEach((auto, index) => {
 
-        const diasAuto =
+    const fechaEstado = siguienteDiaHabil(
+        auto.fechaAuto,
+        festivos,
+        FECHAS_CIERRE
+    );
+
+    const diasAuto =
+        contarDiasCalendarioSinSuspension(
+            auto.fechaAuto,
+            fechaEstado,
+            FECHAS_CIERRE
+        );
+
+    totalDias += diasAuto;
+
+    periodos.push({
+        descripcion: `Auto adicional #${index + 1} (auto → estado)`,
+        inicio: auto.fechaAuto,
+        fin: fechaEstado
+    });
+
+    if (auto.plazoDias > 0) {
+
+        const fechaLimitePlazo =
+            sumarDiasHabilesJudiciales(
+                fechaEstado,
+                auto.plazoDias,
+                festivos,
+                FECHAS_CIERRE
+            ).fechaFinal;
+
+        const diasPlazo =
             contarDiasCalendarioSinSuspension(
-                auto.fechaAuto,
-                auto.fechaEstado,
+                fechaEstado,
+                fechaLimitePlazo,
                 FECHAS_CIERRE
             );
 
-        totalDias += diasAuto;
+        totalDias += diasPlazo;
 
         periodos.push({
-            descripcion: `Auto adicional #${index + 1}`,
-            inicio: auto.fechaAuto,
-            fin: auto.fechaEstado
+            descripcion: `Plazo auto adicional #${index + 1}`,
+            inicio: fechaEstado,
+            fin: fechaLimitePlazo
         });
 
-        if (auto.plazoDias > 0) {
-            const fechaLimitePlazo =
-                sumarDiasHabilesJudiciales(
-                    auto.fechaEstado,
-                    auto.plazoDias,
-                    festivos,
-                    FECHAS_CIERRE
-                ).fechaFinal;
+        const fecha10 =
+            sumarDiasHabilesJudiciales(
+                fechaLimitePlazo,
+                10,
+                festivos,
+                FECHAS_CIERRE
+            ).fechaFinal;
 
-            const diasPlazo =
-                contarDiasCalendarioSinSuspension(
-                    auto.fechaEstado,
-                    fechaLimitePlazo,
-                    FECHAS_CIERRE
-                );
+        const dias10 =
+            contarDiasCalendarioSinSuspension(
+                fechaLimitePlazo,
+                fecha10,
+                FECHAS_CIERRE
+            );
 
-            totalDias += diasPlazo;
+        totalDias += dias10;
 
-            periodos.push({
-                descripcion: `Plazo auto adicional #${index + 1}`,
-                inicio: auto.fechaEstado,
-                fin: fechaLimitePlazo
-            });
+        periodos.push({
+            descripcion: `+10 días auto adicional #${index + 1}`,
+            inicio: fechaLimitePlazo,
+            fin: fecha10
+        });
 
-            const fecha10 =
-                sumarDiasHabilesJudiciales(
-                    fechaLimitePlazo,
-                    10,
-                    festivos,
-                    FECHAS_CIERRE
-                ).fechaFinal;
-
-            const dias10 =
-                contarDiasCalendarioSinSuspension(
-                    fechaLimitePlazo,
-                    fecha10,
-                    FECHAS_CIERRE
-                );
-
-            totalDias += dias10;
-
-            periodos.push({
-                descripcion: `+10 días auto adicional #${index + 1}`,
-                inicio: fechaLimitePlazo,
-                fin: fecha10
-            });
-
-            fechaBaseMulta = fecha10;
-        }
-    });
+        fechaBaseMulta = fecha10;
+    }
+});
 
     /* =================================================
        9. DETECCIÓN DE RESOLUCIONES
@@ -433,6 +448,7 @@ export function calcularCaso(params) {
         detalleDias: {cumplimiento: detalleCumplimiento}
     };
 }
+
 
 
 
