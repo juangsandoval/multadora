@@ -10,6 +10,8 @@ import { validarCaso } from "./logic/validaciones.js";
 import { renderDetalleDias } from "./modulos/renderDetalleDias.js";
 import { sumarDiasHabilesJudiciales} from "./logic/fechas.js"; 
 
+let resultadoActual =null;
+
 
 /* =====================================================
    UTILIDADES
@@ -131,15 +133,6 @@ function renderErroresValidacion(errores) {
     `;
 }
 
-
-/* =====================================================
-   MODULOS
-   ===================================================== */
-renderDetalleDias(
-    resultado.detalleDias.cumplimiento,
-    document.getElementById("detalleDias")
-);
-
 /* =====================================================
    EVENTOS
    ===================================================== */
@@ -148,22 +141,32 @@ document.getElementById("btnCalcular").addEventListener("click", () => {
 
     const datos = leerFormulario();
 
-    // ✅ VALIDACIÓN PREVIA (reemplaza disabled del notebook)
     const validacion = validarCaso(datos);
-
     if (!validacion.esValido) {
         renderErroresValidacion(validacion.errores);
-        return; // ⛔ NO se ejecuta el cálculo
+        return;
     }
 
     try {
-        const resultado = calcularCaso(datos);
-        renderResultado(resultado);
+        resultadoActual = calcularCaso(datos);
+        renderResultado(resultadoActual);
     } catch (error) {
-        // Errores graves del motor
         renderErroresValidacion([error.message]);
     }
 });
+
+document.getElementById("btnDetalle").addEventListener("click", () => {
+    if (!resultadoActual) {
+        alert("Primero debes calcular el caso.");
+        return;
+    }
+
+    renderDetalleDias(
+        resultadoActual.detalleDias.cumplimiento,
+        document.getElementById("detalleDias")
+    );
+});
+
 
 
 
