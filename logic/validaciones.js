@@ -16,7 +16,6 @@ export function validarCaso(params) {
         fechaNotificacion,
         fechaInforme,
         fechaAutoInicio,
-        fechaEstadoAuto,
         modoPlazoCondicional,
         fechaLimiteCondicional,
         modoPlazoCumplimiento,
@@ -44,13 +43,6 @@ export function validarCaso(params) {
         }
     }
 
-    if (fechaAutoInicio && fechaEstadoAuto) {
-        if (fechaEstadoAuto < fechaAutoInicio) {
-            errores.push(
-                "La fecha de estado del auto debe ser igual o posterior al auto."
-            );
-        }
-    }
 
     /* ===============================
        VALIDACIONES POR MODO
@@ -74,7 +66,7 @@ export function validarCaso(params) {
 
 autosAdicionales.forEach((auto, i) => {
 
-    if (!auto.fechaAuto && !auto.fechaEstado && auto.plazoDias === 0) {
+    if (!auto.fechaAuto && auto.plazoDias === 0) {
         return; // bloque vacío, se ignora
     }
 
@@ -82,19 +74,19 @@ autosAdicionales.forEach((auto, i) => {
         errores.push(`En el auto adicional #${i + 1}, falta la fecha del auto.`);
     }
 
-    if (!auto.fechaEstado) {
-        errores.push(`En el auto adicional #${i + 1}, falta la fecha del estado.`);
-    }
-
     if (auto.plazoDias <= 0) {
         errores.push(`En el auto adicional #${i + 1}, el plazo debe ser mayor a cero.`);
     }
 
-    if (auto.fechaAuto && auto.fechaEstado && auto.fechaEstado < auto.fechaAuto) {
-        errores.push(
-            `En el auto adicional #${i + 1}, la fecha de estado no puede ser anterior al auto.`
-        );
-    }
+    const autos = Array.isArray(autosAdicionales) ? autosAdicionales : [];
+        autos.forEach((auto, i) => {
+          const bloqueVacio = !auto?.fechaAuto && (!auto?.plazoDias || auto.plazoDias === 0);
+          if (bloqueVacio) return;
+        
+          if (!auto.fechaAuto) errores.push(`En el auto adicional #${i + 1}, falta la fecha del auto.`);
+          if (auto.plazoDias == null || auto.plazoDias < 0) errores.push(`En el auto adicional #${i + 1}, el plazo no puede ser negativo.`);
+        });
+
 });
 
 
@@ -108,4 +100,5 @@ autosAdicionales.forEach((auto, i) => {
         advertencias
     };
 }
+
 
