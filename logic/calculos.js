@@ -334,6 +334,10 @@ export function calcularCaso(params) {
     /* =================================================
        8. AUTOS ADICIONALES
        ================================================= */
+    const autosExtra = Array.isArray(autosAdicionales) ? autosAdicionales : [];
+
+    autosExtra.forEach((auto, index) => {
+          if (!auto?.fechaAuto || !auto?.plazoDias || auto.plazoDias <= 0) return;
 
    autosAdicionales.forEach((auto, index) => {
 
@@ -451,6 +455,7 @@ export function calcularCaso(params) {
         detalleDias: {cumplimiento: detalleCumplimiento}
     };
 }
+
 
 
 
