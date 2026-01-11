@@ -64,31 +64,20 @@ export function validarCaso(params) {
        AUTOS ADICIONALES
        =============================== */
 
-autosAdicionales.forEach((auto, i) => {
+const autos = Array.isArray(autosAdicionales) ? autosAdicionales : [];
 
-    if (!auto.fechaAuto && auto.plazoDias === 0) {
-        return; // bloque vacío, se ignora
-    }
+autos.forEach((auto, i) => {
+  const bloqueVacio = !auto?.fechaAuto && (!auto?.plazoDias || auto.plazoDias === 0);
+  if (bloqueVacio) return;
 
-    if (!auto.fechaAuto) {
-        errores.push(`En el auto adicional #${i + 1}, falta la fecha del auto.`);
-    }
+  if (!auto.fechaAuto) {
+    errores.push(`En el auto adicional #${i + 1}, falta la fecha del auto.`);
+  }
 
-    if (auto.plazoDias <= 0) {
-        errores.push(`En el auto adicional #${i + 1}, el plazo debe ser mayor a cero.`);
-    }
-
-    const autos = Array.isArray(autosAdicionales) ? autosAdicionales : [];
-        autos.forEach((auto, i) => {
-          const bloqueVacio = !auto?.fechaAuto && (!auto?.plazoDias || auto.plazoDias === 0);
-          if (bloqueVacio) return;
-        
-          if (!auto.fechaAuto) errores.push(`En el auto adicional #${i + 1}, falta la fecha del auto.`);
-          if (auto.plazoDias == null || auto.plazoDias < 0) errores.push(`En el auto adicional #${i + 1}, el plazo no puede ser negativo.`);
-        });
-
+  if (auto.plazoDias == null || auto.plazoDias <= 0) {
+    errores.push(`En el auto adicional #${i + 1}, el plazo debe ser mayor a cero.`);
+  }
 });
-
 
     /* ===============================
        RESULTADO
@@ -100,5 +89,6 @@ autosAdicionales.forEach((auto, i) => {
         advertencias
     };
 }
+
 
 
