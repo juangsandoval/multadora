@@ -38,7 +38,7 @@ form {
     grid-template-columns: 1fr;
     max-width: 900px;
     margin: 0 auto;
-    jutify-items: center;
+    justify-items: center;
 }
 
 
@@ -254,6 +254,7 @@ hr {
         width: 100%;
     }
 }
+
 
 
 
