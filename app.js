@@ -65,14 +65,19 @@ function leerFormulario() {
    ===================================================== */
 
 function leerAutosAdicionales() {
-    const autos = [];
-    document.querySelectorAll(".auto-adicional").forEach(div => {
-        autos.push({
-            fechaAuto: parseFecha(div.querySelector(".fecha-auto").value),
-            plazoDias: parseNumero(div.querySelector(".plazo-auto").value)
-        });
-    });
-    return autos;
+  const autos = [];
+
+  document.querySelectorAll(".auto-adicional").forEach(div => {
+    const fechaAuto = parseFecha(div.querySelector(".fecha-auto").value);
+    const plazoDias = parseNumero(div.querySelector(".plazo-auto").value);
+
+    // 👇 Si el bloque está vacío, NO lo mandes al motor
+    if (!fechaAuto && plazoDias === 0) return;
+
+    autos.push({ fechaAuto, plazoDias });
+  });
+
+  return autos;
 }
 
 
@@ -164,6 +169,7 @@ document.getElementById("btnDetalle").addEventListener("click", () => {
         document.getElementById("detalleDias")
     );
 });
+
 
 
 
