@@ -331,88 +331,81 @@ export function calcularCaso(params) {
         }
     }
 
-    /* =================================================
-       8. AUTOS ADICIONALES
-       ================================================= */
-    const autosExtra = Array.isArray(autosAdicionales) ? autosAdicionales : [];
+ /* =================================================
+   8. AUTOS ADICIONALES
+   ================================================= */
 
-    autosExtra.forEach((auto, index) => {
-          if (!auto?.fechaAuto || !auto?.plazoDias || auto.plazoDias <= 0) return;
+const autosExtra = Array.isArray(autosAdicionales) ? autosAdicionales : [];
 
-   autosAdicionales.forEach((auto, index) => {
+autosExtra.forEach((auto, index) => {
+  // Si el auto viene vacío o inválido, lo ignoramos
+  if (!auto?.fechaAuto || !auto?.plazoDias || auto.plazoDias <= 0) return;
 
-    const fechaEstado = siguienteDiaHabil(
-        auto.fechaAuto,
-        festivos,
-        FECHAS_CIERRE
-    );
+  const fechaEstado = siguienteDiaHabil(
+    auto.fechaAuto,
+    festivos,
+    FECHAS_CIERRE
+  );
 
-    const diasAuto =
-        contarDiasCalendarioSinSuspension(
-            auto.fechaAuto,
-            fechaEstado,
-            FECHAS_CIERRE
-        );
+  const diasAuto = contarDiasCalendarioSinSuspension(
+    auto.fechaAuto,
+    fechaEstado,
+    FECHAS_CIERRE
+  );
 
-    totalDias += diasAuto;
+  totalDias += diasAuto;
 
-    periodos.push({
-        descripcion: `Auto adicional #${index + 1} (auto → estado)`,
-        inicio: auto.fechaAuto,
-        fin: fechaEstado
-    });
+  periodos.push({
+    descripcion: `Auto adicional #${index + 1} (auto → estado)`,
+    inicio: auto.fechaAuto,
+    fin: fechaEstado
+  });
 
-    if (auto.plazoDias > 0) {
+  const fechaLimitePlazo = sumarDiasHabilesJudiciales(
+    fechaEstado,
+    auto.plazoDias,
+    festivos,
+    FECHAS_CIERRE
+  ).fechaFinal;
 
-        const fechaLimitePlazo =
-            sumarDiasHabilesJudiciales(
-                fechaEstado,
-                auto.plazoDias,
-                festivos,
-                FECHAS_CIERRE
-            ).fechaFinal;
+  const diasPlazo = contarDiasCalendarioSinSuspension(
+    fechaEstado,
+    fechaLimitePlazo,
+    FECHAS_CIERRE
+  );
 
-        const diasPlazo =
-            contarDiasCalendarioSinSuspension(
-                fechaEstado,
-                fechaLimitePlazo,
-                FECHAS_CIERRE
-            );
+  totalDias += diasPlazo;
 
-        totalDias += diasPlazo;
+  periodos.push({
+    descripcion: `Plazo auto adicional #${index + 1}`,
+    inicio: fechaEstado,
+    fin: fechaLimitePlazo
+  });
 
-        periodos.push({
-            descripcion: `Plazo auto adicional #${index + 1}`,
-            inicio: fechaEstado,
-            fin: fechaLimitePlazo
-        });
+  const fecha10 = sumarDiasHabilesJudiciales(
+    fechaLimitePlazo,
+    10,
+    festivos,
+    FECHAS_CIERRE
+  ).fechaFinal;
 
-        const fecha10 =
-            sumarDiasHabilesJudiciales(
-                fechaLimitePlazo,
-                10,
-                festivos,
-                FECHAS_CIERRE
-            ).fechaFinal;
+  const dias10 = contarDiasCalendarioSinSuspension(
+    fechaLimitePlazo,
+    fecha10,
+    FECHAS_CIERRE
+  );
 
-        const dias10 =
-            contarDiasCalendarioSinSuspension(
-                fechaLimitePlazo,
-                fecha10,
-                FECHAS_CIERRE
-            );
+  totalDias += dias10;
 
-        totalDias += dias10;
+  periodos.push({
+    descripcion: `+10 días auto adicional #${index + 1}`,
+    inicio: fechaLimitePlazo,
+    fin: fecha10
+  });
 
-        periodos.push({
-            descripcion: `+10 días auto adicional #${index + 1}`,
-            inicio: fechaLimitePlazo,
-            fin: fecha10
-        });
-
-        fechaBaseMulta = fecha10;
-    }
+  fechaBaseMulta = fecha10;
 });
+
 
     /* =================================================
        9. DETECCIÓN DE RESOLUCIONES
@@ -455,6 +448,7 @@ export function calcularCaso(params) {
         detalleDias: {cumplimiento: detalleCumplimiento}
     };
 }
+
 
 
 
