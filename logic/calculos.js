@@ -42,6 +42,77 @@ import {
 const FECHAS_CIERRE = generarSetFechasCierre();
 const RESOLUCIONES = normalizarResoluciones();
 
+/* =====================================================
+   FUNCIONES DE AYUDA PARA CREAR LA TABLA DE RESUMEN
+   ===================================================== */
+function keyMes(fecha) {
+  const y = fecha.getFullYear();
+  const m = String(fecha.getMonth() + 1).padStart(2, "0");
+  return `${y}-${m}`; // ej: 2026-01
+}
+
+function labelMes(key) {
+  const [y, m] = key.split("-").map(Number);
+  const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+  return `${meses[m - 1]} ${y}`;
+}
+
+/**
+ * Cuenta días calendario sin suspensión, desglosado por mes.
+ * Convención: cuenta días en el intervalo [inicio, fin), o sea: incluye inicio, excluye fin.
+ */
+function desglosePorMesSinSuspension(inicio, fin, fechasCierreSet) {
+  const conteo = {};
+
+  // Normaliza a medianoche por seguridad
+  let d = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate());
+  const end = new Date(fin.getFullYear(), fin.getMonth(), fin.getDate());
+
+  while (d < end) {
+    const iso = d.toISOString().split("T")[0];
+    if (!fechasCierreSet.has(iso)) {
+      const k = keyMes(d);
+      conteo[k] = (conteo[k] ?? 0) + 1;
+    }
+    d.setDate(d.getDate() + 1);
+  }
+
+  return conteo;
+}
+
+function formatearDMY(fecha) {
+  const dd = String(fecha.getDate()).padStart(2, "0");
+  const mm = String(fecha.getMonth() + 1).padStart(2, "0");
+  const yy = fecha.getFullYear();
+  return `${dd}/${mm}/${yy}`;
+}
+
+// “Actuación” bonita: usa tu descripción + rango de fechas
+function tituloActuacion(periodo) {
+  return `${periodo.descripcion} (${formatearDMY(periodo.inicio)} → ${formatearDMY(periodo.fin)})`;
+}
+
+function generarResumenMensual(periodos, fechasCierreSet) {
+  // 1) desglose por fila
+  const filas = periodos.map(p => {
+    const porMes = desglosePorMesSinSuspension(p.inicio, p.fin, fechasCierreSet);
+    const total = Object.values(porMes).reduce((a, b) => a + b, 0);
+    return {
+      actuacion: tituloActuacion(p),
+      porMes,
+      total
+    };
+  });
+
+  // 2) columnas (meses) = unión ordenada de todos los keys
+  const mesesSet = new Set();
+  filas.forEach(f => Object.keys(f.porMes).forEach(k => mesesSet.add(k)));
+
+  const mesesKeys = Array.from(mesesSet).sort(); // "2026-01", "2026-02", ...
+  const meses = mesesKeys.map(k => ({ key: k, label: labelMes(k) }));
+
+  return { meses, filas };
+}
 
 /* =====================================================
    FUNCIÓN PRINCIPAL
@@ -434,6 +505,7 @@ autosExtra.forEach((auto, index) => {
     /* =================================================
        RESULTADO FINAL
        ================================================= */
+    const resumenMensual = generarResumenMensual(periodos, FECHAS_CIERRE); // GENERAR EL RESUMEN PARA LA TABLA DEL AUTO DE MULTA
 
     return {
         fechas: {
@@ -452,10 +524,12 @@ autosExtra.forEach((auto, index) => {
         detalleDias: {
                   cumplimiento: detalleCumplimiento,
                   informe: detalleInforme
-                }
+                },
+        resumenMensual
 
     };
 }
+
 
 
 
