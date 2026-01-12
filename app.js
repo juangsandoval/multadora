@@ -37,7 +37,7 @@ function renderResumenMensual(resumen) {
   cont.innerHTML = "";
 
   if (!resumen?.meses?.length || !resumen?.filas?.length) {
-    cont.textContent = "No hay periodos para mostrar.";
+    cont.textContent = "No hay información para mostrar.";
     return;
   }
 
@@ -83,9 +83,9 @@ function renderResumenMensual(resumen) {
       tr.appendChild(td);
     });
 
-    const tdTotal = document.createElement("td");
-    tdTotal.textContent = String(fila.total ?? suma);
-    tr.appendChild(tdTotal);
+    const tdTot = document.createElement("td");
+    tdTot.textContent = String(fila.total ?? suma);
+    tr.appendChild(tdTot);
 
     tbody.appendChild(tr);
   });
@@ -93,11 +93,6 @@ function renderResumenMensual(resumen) {
   table.appendChild(tbody);
   cont.appendChild(table);
 }
-
-
-
-
-
 
 /* =====================================================
    LECTURA DEL FORMULARIO
@@ -205,7 +200,7 @@ function renderErroresValidacion(errores) {
 }
 
 /* =====================================================
-   EVENTOS
+   EVENTOS DE LOS BOTONES
    ===================================================== */
 
 document.getElementById("btnCalcular").addEventListener("click", () => {
@@ -222,7 +217,7 @@ document.getElementById("btnCalcular").addEventListener("click", () => {
     try {
         resultadoActual = calcularCaso(datos);
         renderResultado(resultadoActual);
-        renderResumenMensual(resultadoActual.resumenMensual);
+        renderResumenMensual(resultadoActual.resumenMensualRimbombante);
     } catch (error) {
         renderErroresValidacion([error.message]);
     }
@@ -249,6 +244,30 @@ document.getElementById("btnDetalle").addEventListener("click", () => {
   );
    
 });
+
+document.getElementById("btnCopiarResumen").addEventListener("click", async () => {
+  const table = document.querySelector("#resumenMensual table");
+  if (!table) return alert("No hay tabla para copiar.");
+
+  const html = table.outerHTML;
+  const text = table.innerText;
+
+  try {
+    await navigator.clipboard.write([
+      new ClipboardItem({
+        "text/html": new Blob([html], { type: "text/html" }),
+        "text/plain": new Blob([text], { type: "text/plain" })
+      })
+    ]);
+    alert("Tabla copiada. Pégala en Word.");
+  } catch (e) {
+    // fallback simple
+    await navigator.clipboard.writeText(text);
+    alert("Copiado como texto (fallback).");
+  }
+});
+
+
 
 
 
