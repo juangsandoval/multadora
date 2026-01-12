@@ -31,7 +31,7 @@ function parseNumero(valor, defecto = 0) {
 function limpiar(elemento) {
     elemento.innerHTML = "";
 }
-
+//==============FUNCIÓN PPAL PARA LA TABLA
 function renderResumenMensual(resumen) {
   const cont = document.getElementById("resumenMensual");
   cont.innerHTML = "";
@@ -89,9 +89,40 @@ function renderResumenMensual(resumen) {
 
     tbody.appendChild(tr);
   });
+//=======FILA PARA CONOCER EL TOTAL
 
-  table.appendChild(tbody);
-  cont.appendChild(table);
+   // ---- Fila final TOTAL (suma por columna) ----
+   const trTotal = document.createElement("tr");
+   trTotal.className = "fila-total";
+   
+   const tdLabel = document.createElement("td");
+   tdLabel.textContent = "TOTAL";
+   trTotal.appendChild(tdLabel);
+   
+   let totalGeneral = 0;
+   
+   resumen.meses.forEach(m => {
+     let sumaMes = 0;
+   
+     resumen.filas.forEach(f => {
+       sumaMes += (f.porMes?.[m.key] ?? 0);
+     });
+   
+     totalGeneral += sumaMes;
+   
+     const td = document.createElement("td");
+     td.textContent = String(sumaMes);
+     trTotal.appendChild(td);
+   });
+   
+     const tdTotal = document.createElement("td");
+     tdTotal.textContent = String(totalGeneral);
+     trTotal.appendChild(tdTotal);
+      
+     tbody.appendChild(trTotal);
+    
+     table.appendChild(tbody);
+     cont.appendChild(table);
 }
 
 /* =====================================================
@@ -142,7 +173,6 @@ function leerAutosAdicionales() {
 
   return autos;
 }
-
 
 /* =====================================================
    RENDER DE RESULTADOS
@@ -266,6 +296,7 @@ document.getElementById("btnCopiarResumen").addEventListener("click", async () =
     alert("Copiado como texto (fallback).");
   }
 });
+
 
 
 
