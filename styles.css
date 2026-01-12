@@ -6,6 +6,39 @@
  *
  * Diseño sobrio, claro y funcional.
  *******************************************************/
+/* ====== FORM EN 2 COLUMNAS ====== */
+#formulario{
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 16px 24px; /* fila / columna */
+  align-items: start;
+}
+
+/* Cada fieldset se comporta como “tarjeta” en su celda */
+#formulario fieldset{
+  margin: 0;
+}
+
+/* ====== Secciones que deben ocupar TODO el ancho ====== */
+#formulario fieldset:nth-of-type(6), /* Autos adicionales (6to fieldset) */
+#formulario #btnCalcular,
+#formulario #btnDetalle{
+  grid-column: 1 / -1;
+}
+
+/* Opcional: poner los botones en una fila */
+#formulario #btnCalcular,
+#formulario #btnDetalle{
+  justify-self: start;
+  margin-right: 8px;
+}
+
+/* Responsive: en pantallas pequeñas vuelve a 1 columna */
+@media (max-width: 720px){
+  #formulario{
+    grid-template-columns: 1fr;
+  }
+}
 
 body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
@@ -277,6 +310,7 @@ hr {
         width: 100%;
     }
 }
+
 
 
 
