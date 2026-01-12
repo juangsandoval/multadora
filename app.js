@@ -10,7 +10,9 @@ import { validarCaso } from "./logic/validaciones.js";
 import { renderDetalleDias } from "./modulos/renderDetalleDias.js";
 import { sumarDiasHabilesJudiciales} from "./logic/fechas.js"; 
 
-let resultadoActual =null;
+let resultadoActual = null;
+let datosActual = null;
+
 
 
 /* =====================================================
@@ -143,6 +145,7 @@ function renderErroresValidacion(errores) {
 document.getElementById("btnCalcular").addEventListener("click", () => {
 
     const datos = leerFormulario();
+    datosActual = datos;
 
     const validacion = validarCaso(datos);
     if (!validacion.esValido) {
@@ -164,11 +167,22 @@ document.getElementById("btnDetalle").addEventListener("click", () => {
         return;
     }
 
-    renderDetalleDias(
-        resultadoActual.detalleDias.cumplimiento,
-        document.getElementById("detalleDias")
-    );
+    // 1) Detalle cumplimiento (si aplica)
+  renderDetalleDias(
+    resultadoActual.detalleDias.cumplimiento,
+    document.getElementById("detalleDias"),
+    (datosActual?.modoPlazoCumplimiento === "Días") ? datosActual.diasCumplimiento : null
+  );
+
+  // 2) Detalle término para informar (Ddte)
+  renderDetalleDias(
+    resultadoActual.detalleDias.informe,
+    document.getElementById("detalleDiasInforme"),
+    datosActual?.diasInforme ?? null
+  );
+   
 });
+
 
 
 
