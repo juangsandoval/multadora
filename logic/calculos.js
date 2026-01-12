@@ -170,13 +170,17 @@ export function calcularCaso(params) {
        4. INFORME (DDTE)
        ================================================= */
 
-    const fechaLimiteInforme =
-        sumarDiasHabilesJudiciales(
-            fechaCumplimiento,
-            diasInforme,
-            festivos,
-            FECHAS_CIERRE
-        ).fechaFinal;
+    const resultadoInforme =
+  sumarDiasHabilesJudiciales(
+      fechaCumplimiento,
+      diasInforme,
+      festivos,
+      FECHAS_CIERRE
+  );
+
+    const fechaLimiteInforme = resultadoInforme.fechaFinal;
+    const detalleInforme = resultadoInforme.detalle;
+
 
     let informeEntendido = new Date(fechaInforme);
 
@@ -445,9 +449,14 @@ autosExtra.forEach((auto, index) => {
         periodos,
         resolucionesAfectadas: Array.from(resolucionesAfectadas),
         multa,
-        detalleDias: {cumplimiento: detalleCumplimiento}
+        detalleDias: {
+                  cumplimiento: detalleCumplimiento,
+                  informe: detalleInforme
+                }
+
     };
 }
+
 
 
 
