@@ -248,6 +248,10 @@ SE AÑADE ESTULO A LA TABLA DE RESUMEN
   position: sticky; /* opcional */
   top: 0;           /* opcional */
 }
+.fila-total td {
+  font-weight: bold;
+}
+
 
 /* ============================= */
 /* Separadores */
@@ -273,6 +277,7 @@ hr {
         width: 100%;
     }
 }
+
 
 
 
