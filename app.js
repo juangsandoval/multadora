@@ -32,6 +32,72 @@ function limpiar(elemento) {
     elemento.innerHTML = "";
 }
 
+function renderResumenMensual(resumen) {
+  const cont = document.getElementById("resumenMensual");
+  cont.innerHTML = "";
+
+  if (!resumen?.meses?.length || !resumen?.filas?.length) {
+    cont.textContent = "No hay periodos para mostrar.";
+    return;
+  }
+
+  const table = document.createElement("table");
+  table.className = "tabla-resumen";
+
+  const thead = document.createElement("thead");
+  const trh = document.createElement("tr");
+
+  const thAct = document.createElement("th");
+  thAct.textContent = "Actuación";
+  trh.appendChild(thAct);
+
+  resumen.meses.forEach(m => {
+    const th = document.createElement("th");
+    th.textContent = m.label;
+    trh.appendChild(th);
+  });
+
+  const thTot = document.createElement("th");
+  thTot.textContent = "Total";
+  trh.appendChild(thTot);
+
+  thead.appendChild(trh);
+  table.appendChild(thead);
+
+  const tbody = document.createElement("tbody");
+
+  resumen.filas.forEach(fila => {
+    const tr = document.createElement("tr");
+
+    const tdAct = document.createElement("td");
+    tdAct.textContent = fila.actuacion;
+    tr.appendChild(tdAct);
+
+    let suma = 0;
+    resumen.meses.forEach(m => {
+      const v = fila.porMes[m.key] ?? 0;
+      suma += v;
+
+      const td = document.createElement("td");
+      td.textContent = String(v);
+      tr.appendChild(td);
+    });
+
+    const tdTotal = document.createElement("td");
+    tdTotal.textContent = String(fila.total ?? suma);
+    tr.appendChild(tdTotal);
+
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(tbody);
+  cont.appendChild(table);
+}
+
+
+
+
+
 
 /* =====================================================
    LECTURA DEL FORMULARIO
@@ -156,6 +222,7 @@ document.getElementById("btnCalcular").addEventListener("click", () => {
     try {
         resultadoActual = calcularCaso(datos);
         renderResultado(resultadoActual);
+        renderResumenMensual(resultadoActual.resumenMensual);
     } catch (error) {
         renderErroresValidacion([error.message]);
     }
@@ -182,6 +249,7 @@ document.getElementById("btnDetalle").addEventListener("click", () => {
   );
    
 });
+
 
 
 
