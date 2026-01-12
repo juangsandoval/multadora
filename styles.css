@@ -229,6 +229,25 @@ button {
 #salida ul {
     padding-left: 20px;
 }
+/*=============================================
+SE AÑADE ESTULO A LA TABLA DE RESUMEN
+============================================*/
+.tabla-resumen {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-resumen th,
+.tabla-resumen td {
+  border: 1px solid #ccc;
+  padding: 6px 8px;
+  font-size: 0.95rem;
+}
+
+.tabla-resumen th {
+  position: sticky; /* opcional */
+  top: 0;           /* opcional */
+}
 
 /* ============================= */
 /* Separadores */
@@ -254,6 +273,7 @@ hr {
         width: 100%;
     }
 }
+
 
 
 
