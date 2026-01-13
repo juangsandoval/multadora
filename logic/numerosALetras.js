@@ -9,6 +9,34 @@ export function numeroALetrasPesos(valor) {
   return `${letras} ${sufijo}`.toUpperCase();
 }
 
+export function monedaALetrasCOP(valor) {
+  const n = Number(valor ?? 0);
+  if (!Number.isFinite(n)) return "cero pesos con cero centavos";
+
+  const abs = Math.abs(n);
+
+  // pesos y centavos (2 decimales)
+  let pesos = Math.floor(abs);
+  let centavos = Math.round((abs - pesos) * 100);
+
+  // ajuste si por redondeo centavos=100
+  if (centavos === 100) {
+    pesos += 1;
+    centavos = 0;
+  }
+
+  const signo = n < 0 ? "menos " : "";
+
+  const pesosTxt = numeroALetras(pesos);
+  const pesosLabel = pesos === 1 ? "peso" : "pesos";
+
+  const centTxt = numeroALetras(centavos);
+  const centLabel = centavos === 1 ? "centavo" : "centavos";
+
+  return `${signo}${pesosTxt} ${pesosLabel} con ${centTxt} ${centLabel}`;
+}
+
+
 function numeroALetras(num) {
   if (num < 0) return `MENOS ${numeroALetras(Math.abs(num))}`;
   if (num === 0) return "cero";
