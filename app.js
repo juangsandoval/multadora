@@ -9,7 +9,9 @@ import { calcularCaso } from "./logic/calculos.js";
 import { validarCaso } from "./logic/validaciones.js";
 import { renderDetalleDias } from "./modulos/renderDetalleDias.js";
 import { sumarDiasHabilesJudiciales} from "./logic/fechas.js"; 
-import { numeroALetrasPesos, monedaALetrasCOP } from "./logic/numerosALetras.js";
+import { numeroALetrasPesos } from "./logic/numerosALetras.js";
+import { monedaALetrasCOP } from "./logic/numerosALetras.js";
+
 
 
 
@@ -309,6 +311,7 @@ document.getElementById("btnCopiarResumen").addEventListener("click", async () =
     alert("Copiado como texto (fallback).");
   }
 });
+
 
 
 
