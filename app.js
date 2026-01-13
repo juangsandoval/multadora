@@ -182,46 +182,50 @@ function leerAutosAdicionales() {
    ===================================================== */
 
 function renderResultado(resultado) {
-    const salida = document.getElementById("salida");
-    limpiar(salida);
+  const salida = document.getElementById("salida");
+  limpiar(salida);
 
-    const f = resultado.fechas;
+  const f = resultado.fechas;
+  const valorMulta = Number(resultado?.multa?.valorMulta ?? 0);
 
-    salida.innerHTML = `
-        <h3>📌 Resultado del cómputo</h3>
+  const multaFormateada = valorMulta.toLocaleString("es-CO", {
+    style: "currency",
+    currency: "COP",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
 
-        <p><b>Ejecutoria:</b> ${f.fechaEjecutoria.toLocaleDateString()}</p>
-        <p><b>Fecha límite obligación condicional:</b> ${f.fechaLimiteObligacion.toLocaleDateString()}</p>
-        <p><b>Fecha cumplimiento (Ddo):</b> ${f.fechaCumplimiento.toLocaleDateString()}</p>
-        <p><b>Fecha límite informe (Ddte):</b> ${f.fechaLimiteInforme.toLocaleDateString()}</p>
-        <p><b>Informe entendido el:</b> ${f.informeEntendido.toLocaleDateString()}</p>
+  salida.innerHTML = `
+    <h3>📌 Resultado del cómputo</h3>
 
-        <p><b>Estado del informe:</b> ${resultado.estadoInforme}</p>
-        <p><b>Total días calendario:</b> ${resultado.totalDias}</p>
+    <p><b>Ejecutoria:</b> ${f.fechaEjecutoria.toLocaleDateString()}</p>
+    <p><b>Fecha límite obligación condicional:</b> ${f.fechaLimiteObligacion.toLocaleDateString()}</p>
+    <p><b>Fecha cumplimiento (Ddo):</b> ${f.fechaCumplimiento.toLocaleDateString()}</p>
+    <p><b>Fecha límite informe (Ddte):</b> ${f.fechaLimiteInforme.toLocaleDateString()}</p>
+    <p><b>Informe entendido el:</b> ${f.informeEntendido.toLocaleDateString()}</p>
 
-        <h4>💰 Multa</h4>
-        <p><b>Año sanción:</b> ${resultado.multa.anioMulta}</p>
-        <p><b>Valor multa:</b> $${resultado.multa.valorMulta.toLocaleString()}</p>
-        <p><b>Equivalente UVB:</b> ${resultado.multa.valorUVB?.toFixed(2) ?? "N/D"}</p>
+    <p><b>Estado del informe:</b> ${resultado.estadoInforme}</p>
+    <p><b>Total días calendario:</b> ${resultado.totalDias}</p>
+
+    <h4>💰 Multa</h4>
+    <p><b>Año sanción:</b> ${resultado.multa.anioMulta}</p>
+    <p><b>Valor multa:</b> ${multaFormateada}</p>
+    <p><b>Equivalente UVB:</b> ${resultado.multa.valorUVB?.toFixed(2) ?? "N/D"}</p>
+  `;
+
+  // --- Multa en spans (número + letras) ---
+  document.getElementById("multaNumero").textContent = multaFormateada;
+  document.getElementById("multaLetras").textContent = "en " + monedaALetrasCOP(valorMulta);
+
+  if (resultado.resolucionesAfectadas.length) {
+    salida.innerHTML += `
+      <h4>📜 Resoluciones aplicables</h4>
+      <ul>
+        ${resultado.resolucionesAfectadas.map(r => `<li>${r}</li>`).join("")}
+      </ul>
     `;
-
-    if (resultado.resolucionesAfectadas.length) {
-        salida.innerHTML += `
-            <h4>📜 Resoluciones aplicables</h4>
-            <ul>
-                ${resultado.resolucionesAfectadas.map(r => `<li>${r}</li>`).join("")}
-            </ul>
-        `;
-    }
+  }
 }
-
-const multaLetras = numeroALetrasPesos(multaNumero);
-
-// Ejemplo: si tienes un <span id="multaNumero"> y otro para letras:
-document.getElementById("multaNumero").textContent = multaNumero.toLocaleString("es-CO");
-document.getElementById("multaLetras").textContent = multaLetras;
-
-
 /* =====================================================
    RENDER DE ERRORES DE VALIDACIÓN
    ===================================================== */
@@ -305,6 +309,7 @@ document.getElementById("btnCopiarResumen").addEventListener("click", async () =
     alert("Copiado como texto (fallback).");
   }
 });
+
 
 
 
