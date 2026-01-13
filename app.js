@@ -9,6 +9,9 @@ import { calcularCaso } from "./logic/calculos.js";
 import { validarCaso } from "./logic/validaciones.js";
 import { renderDetalleDias } from "./modulos/renderDetalleDias.js";
 import { sumarDiasHabilesJudiciales} from "./logic/fechas.js"; 
+import { numeroALetrasPesos } from "./logic/numeroALetras.js";
+
+
 
 let resultadoActual = null;
 let datosActual = null;
@@ -212,6 +215,12 @@ function renderResultado(resultado) {
     }
 }
 
+const multaLetras = numeroALetrasPesos(multaNumero);
+
+// Ejemplo: si tienes un <span id="multaNumero"> y otro para letras:
+document.getElementById("multaNumero").textContent = multaNumero.toLocaleString("es-CO");
+document.getElementById("multaLetras").textContent = multaLetras;
+
 
 /* =====================================================
    RENDER DE ERRORES DE VALIDACIÓN
@@ -296,6 +305,7 @@ document.getElementById("btnCopiarResumen").addEventListener("click", async () =
     alert("Copiado como texto (fallback).");
   }
 });
+
 
 
 
