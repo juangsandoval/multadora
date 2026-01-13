@@ -215,7 +215,7 @@ function renderResultado(resultado) {
 
   // --- Multa en spans (número + letras) ---
   document.getElementById("multaNumero").textContent = multaFormateada;
-  document.getElementById("multaLetras").textContent = "en " + monedaALetrasCOP(valorMulta);
+  document.getElementById("multaLetras").textContent = ("en " + monedaALetrasCOP(valorMulta)).toUpperCase();
 
   if (resultado.resolucionesAfectadas.length) {
     salida.innerHTML += `
@@ -309,6 +309,7 @@ document.getElementById("btnCopiarResumen").addEventListener("click", async () =
     alert("Copiado como texto (fallback).");
   }
 });
+
 
 
 
