@@ -77,9 +77,10 @@ function sumarUnDia(fecha) {
 function desglosePorMesSinSuspension(inicio, fin, fechasCierreSet) {
   const conteo = {};
   let d = new Date(inicio.getFullYear(), inicio.getMonth(), inicio.getDate());
+  d.setDate(d.getDate() + 1);
   const end = new Date(fin.getFullYear(), fin.getMonth(), fin.getDate());
 
-  while (d < end) {
+  while (d <= end) {
     const iso = d.toISOString().split("T")[0];
     if (!fechasCierreSet.has(iso)) {
       const k = keyMes(d);
@@ -644,6 +645,7 @@ autosExtra.forEach((auto, index) => {
         resumenMensualRimbombante,
     };
 }
+
 
 
 
