@@ -44,7 +44,7 @@ export const CIERRES_JUDICIALES = [
     ["2024-04-19", null],
     ["2024-04-24", "2024-06-10"],
     ["2024-08-27", "2024-08-28"],
-    ["2024-03-18", null],
+    ["2024-08-28", null],
     ["2024-12-20", "2025-01-10"],
     ["2025-12-22", "2026-01-09"]
 ];
@@ -238,5 +238,6 @@ export function normalizarResoluciones() {
         fin_dt: new Date(r.fin)
     }));
 }
+
 
 
