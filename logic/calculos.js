@@ -22,6 +22,7 @@ import { generarFestivosCO } from "../data/festivos.js";
 import {
     sumarDiasHabilesJudiciales,
     contarDiasCalendarioSinSuspension,
+    contarDiasCalendarioCorridos,
     detectarCruceSuspension,
     sumarDias,
     siguienteDiaHabil
@@ -112,8 +113,8 @@ function generarResumenMensualRimbombante(periodos, fechasCierreSet) {
       id: "fila3",
       periodo: pInf10,
       actuacion: (p) => {
-        const ini = sumarUnDia(p.inicio);
-        return `El término transcurrido entre el día siguiente en que se informó el incumplimiento (${formatearDMY(ini)}) y el plazo máximo para expedir el auto con requerimiento de cumplimiento conforme al artículo 120 del CGP (${formatearDMY(p.fin)}).`;
+        //const ini = sumarUnDia(p.inicio);
+        return `El término transcurrido entre el día siguiente en que se informó el incumplimiento (${formatearDMY(p.inicio)}) y el plazo máximo para expedir el auto con requerimiento de cumplimiento conforme al artículo 120 del CGP (${formatearDMY(p.fin)}).`;
       }
     },
     {
@@ -125,16 +126,16 @@ function generarResumenMensualRimbombante(periodos, fechasCierreSet) {
       id: "fila5",
       periodo: pEstAcr,
       actuacion: (p) => {
-        const ini = sumarUnDia(p.inicio);
-        return `El plazo otorgado en el auto de inicio para acreditar el cumplimiento: desde el día siguiente al estado del auto (${formatearDMY(ini)}) hasta (${formatearDMY(p.fin)}).`;
+        //const ini = sumarUnDia(p.inicio);
+        return `El plazo otorgado en el auto de inicio para acreditar el cumplimiento: desde el día siguiente al estado del auto (${formatearDMY(p.inicio)}) hasta (${formatearDMY(p.fin)}).`;
       }
     },
     {
       id: "fila6",
       periodo: pAcr10,
       actuacion: (p) => {
-        const ini = sumarUnDia(p.inicio);
-        return `El término transcurrido entre el día siguiente al vencimiento del plazo de acreditación (${formatearDMY(ini)}) y la fecha en la que se debió expedir la presente providencia (${formatearDMY(p.fin)}).`;
+        //const ini = sumarUnDia(p.inicio);
+        return `El término transcurrido entre el día siguiente al vencimiento del plazo de acreditación (${formatearDMY(p.inicio)}) y la fecha en la que se debió expedir la presente providencia (${formatearDMY(p.fin)}).`;
       }
     }
   ].map(item => {
@@ -202,7 +203,7 @@ function generarResumenMensualRimbombante(periodos, fechasCierreSet) {
       const porMes = desglosePorMesSinSuspension(pPlazo.inicio, pPlazo.fin, fechasCierreSet);
       const total = Object.values(porMes).reduce((a, b) => a + b, 0);
       filasAutos.push({
-        actuacion: `El plazo otorgado en el auto adicional #${n} para acreditar el cumplimiento: desde el día siguiente al estado del auto (${formatearDMY(sumarUnDia(pPlazo.inicio))}) hasta (${formatearDMY(pPlazo.fin)}).`,
+        actuacion: `El plazo otorgado en el auto adicional #${n} para acreditar el cumplimiento: desde el día siguiente al estado del auto (${formatearDMY(pPlazo.inicio)}) hasta (${formatearDMY(pPlazo.fin)}).`,
         porMes,
         total
       });
@@ -212,7 +213,7 @@ function generarResumenMensualRimbombante(periodos, fechasCierreSet) {
       const porMes = desglosePorMesSinSuspension(pMas10.inicio, pMas10.fin, fechasCierreSet);
       const total = Object.values(porMes).reduce((a, b) => a + b, 0);
       filasAutos.push({
-        actuacion: `El término transcurrido entre el día siguiente al vencimiento del plazo de acreditación del auto adicional #${n} (${formatearDMY(sumarUnDia(pMas10.inicio))}) y la fecha en la que se debió expedir la providencia correspondiente (${formatearDMY(pMas10.fin)}).`,
+        actuacion: `El término transcurrido entre el día siguiente al vencimiento del plazo de acreditación del auto adicional #${n} (${formatearDMY(pMas10.inicio)}) y la fecha en la que se debió expedir la providencia correspondiente (${formatearDMY(pMas10.fin)}).`,
         porMes,
         total
       });
@@ -444,16 +445,23 @@ export function calcularCaso(params) {
        7. AUTO DE INICIO Y ACREDITACIÓN
        ================================================= */
     let fechaEstadoAutoCalculada = null;
+    let diasCumplimientoAAutoEstado = null;
+    let fechaPlazoMaximoAuto = fecha10Informe;
 
-            if (fechaAutoInicio) {
-                fechaEstadoAutoCalculada = siguienteDiaHabil(
-                    fechaAutoInicio,
-                    festivos,
-                    FECHAS_CIERRE
-                );
-            }
+    if (fechaAutoInicio) {
+        fechaEstadoAutoCalculada = siguienteDiaHabil(
+            fechaAutoInicio,
+            festivos,
+            FECHAS_CIERRE
+        );
+        diasCumplimientoAAutoEstado = contarDiasCalendarioCorridos(
+            fechaCumplimiento,
+            fechaEstadoAutoCalculada
+        );
+    }
 
     let fechaBaseMulta = fechaCumplimiento;
+    let fecha10Acreditacion = null;
 
     if (fechaAutoInicio && fechaEstadoAutoCalculada) {
 
@@ -496,7 +504,7 @@ export function calcularCaso(params) {
                 fin: fechaAcreditacion
             });
 
-            const fecha10Acreditacion =
+            fecha10Acreditacion =
                 sumarDiasHabilesJudiciales(
                     fechaAcreditacion,
                     10,
@@ -630,11 +638,15 @@ autosExtra.forEach((auto, index) => {
             fechaLimiteObligacion,
             fechaCumplimiento,
             fechaLimiteInforme,
-            informeEntendido
+            informeEntendido,
+            fechaEstadoAutoInicio: fechaEstadoAutoCalculada,
+            fechaPlazoMaximoAuto: fecha10Informe,
+            fechaDebioExpedirseProvidencia: fecha10Acreditacion
         },
         estadoInforme,
         cumplimientoOportuno,
         totalDias,
+        diasCumplimientoAAutoEstado,
         periodos,
         resolucionesAfectadas: Array.from(resolucionesAfectadas),
         multa,
@@ -645,18 +657,3 @@ autosExtra.forEach((auto, index) => {
         resumenMensualRimbombante,
     };
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
