@@ -6,268 +6,362 @@
  *
  * Diseño sobrio, claro y funcional.
  *******************************************************/
-/* ====== FORM EN 2 COLUMNAS ====== */
-#formulario{
-  display: grid;
-  grid-template-columns: repeat(2, minmax(280px, 1fr));
-  gap: 16px 24px; /* fila / columna */
-  align-items: start;
+
+/* ============================= */
+/* Base */
+/* ============================= */
+* {
+  box-sizing: border-box;
 }
 
-/* Cada fieldset se comporta como “tarjeta” en su celda */
-#formulario fieldset{
+html, body {
   margin: 0;
-}
-
-/* ====== Secciones que deben ocupar TODO el ancho ====== */
-#formulario fieldset:nth-of-type(6), /* Autos adicionales (6to fieldset) */
-#formulario #btnCalcular,
-#formulario #btnDetalle{
-  grid-column: 1 / -1;
-}
-
-/* Opcional: poner los botones en una fila */
-#formulario #btnCalcular,
-#formulario #btnDetalle{
-  justify-self: start;
-  margin-right: 8px;
-}
-
-/* Responsive: en pantallas pequeñas vuelve a 1 columna */
-@media (max-width: 720px){
-  #formulario{
-    grid-template-columns: 1fr;
-  }
+  padding: 0;
 }
 
 body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-    background-color: #f5f6f7;
-    color: #222;
-    margin: 0;
-    padding: 20px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  background-color: #f5f6f7;
+  color: #222;
+  padding: 20px;
+  line-height: 1.45;
+}
+
+h2, h3, h4 {
+  color: #1f2933;
 }
 
 h2 {
-    margin-bottom: 20px;
-    color: #1f2933;
+  margin: 0;
 }
 
-form {
-    max-width: 900px;
-    background: #fff;
-    padding: 20px 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+h3 {
+  margin-top: 0;
+  margin-bottom: 12px;
 }
 
-.layout{
-    display:grid;
-    gap: 1rem;
-    padding: 1rem;
+h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #374151;
+}
+
+p {
+  margin: 6px 0;
+}
+
+/* ============================= */
+/* Layout principal */
+/* ============================= */
+.layout {
+  display: grid;
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .layout-centrado {
-    grid-template-columns: 1fr;
-    max-width: 900px;
-    margin: 0 auto;
-    justify-items: center;
+  grid-template-columns: 1fr;
 }
 
-
-#preview{
-    display:none;
+.layout-dos-columnas {
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "header header"
+    "izquierda derecha"
+    "tabla tabla"
+    "detalles detalles";
+  align-items: start;
 }
 
-.layout-dos-columnas{
-    grid-template-columns: 2fr 1fr;
-    align-items: start;
+.page-header {
+  grid-area: header;
+  text-align: center;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.panel-izquierdo {
+  grid-area: izquierda;
+  display: grid;
+  gap: 1rem;
+  align-content: start;
+}
+
+.panel-derecho {
+  grid-area: derecha;
+  align-self: start;
+}
+
+.panel-tabla {
+  grid-area: tabla;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.panel-detalles {
+  grid-area: detalles;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.panel-detalles h4:not(:first-child) {
+  margin-top: 24px;
+}
+
+/* ============================= */
+/* Formulario */
+/* ============================= */
+form {
+  width: 100%;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ====== FORM EN 2 COLUMNAS ====== */
+#formulario {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 16px 24px;
+  align-items: start;
+}
+
+/* Cada fieldset se comporta como tarjeta */
+#formulario fieldset {
+  margin: 0;
+}
+
+/* El último fieldset y acciones ocupan todo el ancho */
+#formulario fieldset:nth-of-type(6),
+#formulario .acciones {
+  grid-column: 1 / -1;
+}
+
+.acciones {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ============================= */
+/* Preview providencia */
+/* ============================= */
+#preview {
+  display: none;
+  width: 100%;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 .layout-dos-columnas #preview {
-    display: block;
-}
-#preview {
-    padding-left: 1rem;
-    border-left: 1px solid #ddd;
-    max-width: 500px;
+  display: block;
 }
 
-
+.preview-card p {
+  margin: 8px 0;
+}
 
 /* ============================= */
 /* Fieldsets */
 /* ============================= */
 fieldset {
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 15px 18px;
-    margin-bottom: 18px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 15px 18px;
+  background: #fcfcfd;
 }
 
 legend {
-    font-weight: 600;
-    padding: 0 6px;
-    color: #2e3a46;
+  font-weight: 600;
+  padding: 0 6px;
+  color: #2e3a46;
 }
 
 /* ============================= */
 /* Labels e inputs */
 /* ============================= */
 label {
-    display: block;
-    margin-bottom: 12px;
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 500;
 }
 
 input[type="date"],
 input[type="number"],
 select {
-    display: block;
-    margin-top: 4px;
-    padding: 6px 8px;
-    font-size: 14px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    width: 250px;
-    max-width: 100%;
+  display: block;
+  margin-top: 4px;
+  padding: 8px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  width: 250px;
+  max-width: 100%;
+  background: #fff;
 }
 
 input[type="number"] {
-    width: 120px;
+  width: 120px;
 }
 
 input[type="radio"] {
-    margin-right: 4px;
+  margin-right: 4px;
 }
 
 /* ============================= */
 /* Toggles */
 /* ============================= */
 .toggle {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 .toggle label {
-    display: inline-block;
-    margin-right: 18px;
-    font-weight: 500;
+  display: inline-block;
+  margin-right: 18px;
+  font-weight: 500;
 }
 
 /* ============================= */
 /* Botones */
 /* ============================= */
 button {
-    padding: 8px 14px;
-    font-size: 14px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.05s ease;
+}
+
+button:active {
+  transform: translateY(1px);
 }
 
 #btnCalcular {
-    background-color: #2e7d32;
-    color: #fff;
-    font-weight: 600;
+  background-color: #2e7d32;
+  color: #fff;
+  font-weight: 600;
 }
 
 #btnCalcular:hover {
-    background-color: #256428;
+  background-color: #256428;
 }
 
-.tabla-detalle {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-    font-size: 0.9rem;
+#btnDetalle {
+  background-color: #455a64;
+  color: #fff;
+  font-weight: 600;
 }
 
-.tabla-detalle th,
-.tabla-detalle td {
-    border: 1px solid #ccc;
-    padding: 6px 8px;
-    text-align: left;
+#btnDetalle:hover {
+  background-color: #37474f;
 }
 
-.tabla-detalle th {
-    background: #f5f5f5;
+#btnCopiarResumen {
+  background-color: #6b7280;
+  color: #fff;
+  margin-bottom: 12px;
 }
 
-.tabla-detalle tr.habil {
-    background-color: #e8f5e9;
+#btnCopiarResumen:hover {
+  background-color: #4b5563;
 }
-
-.tabla-detalle tr.no-habil {
-    background-color: #fdecea;
-    color: #8a1c1c;
-}
-
-.tabla-detalle tr.ultimo {
-    font-weight: bold;
-}
-
 
 #btnAgregarAuto {
-    background-color: #1976d2;
-    color: #fff;
-    margin-top: 10px;
+  background-color: #1976d2;
+  color: #fff;
+  margin-top: 10px;
 }
 
 #btnAgregarAuto:hover {
-    background-color: #145ea8;
+  background-color: #145ea8;
+}
+
+.btn-eliminar-auto {
+  background-color: #900606;
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-eliminar-auto:hover {
+  background-color: #6f0404;
 }
 
 /* ============================= */
 /* Autos adicionales */
 /* ============================= */
 .auto-adicional {
-    background: #f9fafb;
-    padding: 12px;
-    border: 1px dashed #ccc;
-    border-radius: 4px;
-    margin-bottom: 12px;
-}
-.btn-eliminar-auto {
-    background-color: #900606;
-    color: #fff;
-    font-weight: 600;
+  background: #f9fafb;
+  padding: 12px;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  margin-bottom: 12px;
 }
 
 /* ============================= */
 /* Salida de resultados */
 /* ============================= */
 #salida {
-    max-width: 900px;
-    background: #fff;
-    padding: 20px 25px;
-    margin-top: 25px;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: none;
+  background: #fff;
+  padding: 20px 25px;
+  margin-top: 0;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 #salida h3 {
-    margin-top: 0;
-    color: #1f2933;
+  margin-top: 0;
+  color: #1f2933;
 }
 
 #salida h4 {
-    margin-bottom: 8px;
-    color: #374151;
+  margin-bottom: 8px;
+  color: #374151;
 }
 
 #salida p {
-    margin: 4px 0;
-    line-height: 1.4;
+  margin: 4px 0;
+  line-height: 1.4;
 }
 
 #salida ul {
-    padding-left: 20px;
+  padding-left: 20px;
 }
-/*=============================================
-SE AÑADE ESTULO A LA TABLA DE RESUMEN
-============================================*/
+
+#detalle-calculo {
+  width: 100%;
+  background: #fff;
+  padding: 20px 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* ============================= */
+/* Tabla resumen */
+/* ============================= */
+#resumenMensual {
+  width: 100%;
+  overflow-x: auto;
+}
+
 .tabla-resumen {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 8px;
 }
 
 .tabla-resumen th,
@@ -275,41 +369,125 @@ SE AÑADE ESTULO A LA TABLA DE RESUMEN
   border: 1px solid #ccc;
   padding: 6px 8px;
   font-size: 0.95rem;
+  text-align: left;
+  vertical-align: top;
 }
 
 .tabla-resumen th {
-  position: sticky; /* opcional */
-  top: 0;           /* opcional */
-}
-.fila-total td {
-  font-weight: bold;
+  background: #f5f5f5;
+  position: sticky;
+  top: 0;
 }
 
+.fila-total td {
+  font-weight: bold;
+  background: #fafafa;
+}
+
+/* ============================= */
+/* Tabla detalle */
+/* ============================= */
+#detalleDias,
+#detalleDiasInforme {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.tabla-detalle {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.tabla-detalle th,
+.tabla-detalle td {
+  border: 1px solid #ccc;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.tabla-detalle th {
+  background: #f5f5f5;
+}
+
+.tabla-detalle tr.habil {
+  background-color: #e8f5e9;
+}
+
+.tabla-detalle tr.no-habil {
+  background-color: #fdecea;
+  color: #8a1c1c;
+}
+
+.tabla-detalle tr.ultimo {
+  font-weight: bold;
+}
 
 /* ============================= */
 /* Separadores */
 /* ============================= */
 hr {
-    border: none;
-    border-top: 1px solid #ddd;
-    margin: 20px 0;
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
 }
 
 /* ============================= */
 /* Responsive */
 /* ============================= */
-@media (max-width: 600px) {
-
-    form, #salida {
-        padding: 15px;
-    }
-
-    input[type="date"],
-    input[type="number"],
-    select {
-        width: 100%;
-    }
+@media (max-width: 900px) {
+  .layout-dos-columnas {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "derecha"
+      "izquierda"
+      "tabla"
+      "detalles";
+  }
 }
+
+@media (max-width: 720px) {
+  #formulario {
+    grid-template-columns: 1fr;
+  }
+
+  #formulario fieldset:nth-of-type(6),
+  #formulario .acciones {
+    grid-column: auto;
+  }
+
+  .acciones {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 12px;
+  }
+
+  .layout,
+  .page-header,
+  form,
+  #salida,
+  #preview,
+  .panel-tabla,
+  .panel-detalles,
+  #detalle-calculo {
+    padding: 15px;
+  }
+
+  input[type="date"],
+  input[type="number"],
+  select {
+    width: 100%;
+  }
+}
+
 
 
 
