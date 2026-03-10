@@ -11,9 +11,9 @@ import { renderDetalleDias } from "./modulos/renderDetalleDias.js";
 import { sumarDiasHabilesJudiciales} from "./logic/fechas.js"; 
 import { numeroALetrasPesos } from "./logic/numerosALetras.js";
 import { monedaALetrasCOP } from "./logic/numerosALetras.js";
+import { inicializarUIAuxiliar } from "./ui.js";
 
-
-
+inicializarUIAuxiliar();
 
 let resultadoActual = null;
 let datosActual = null;
@@ -180,10 +180,10 @@ function leerAutosAdicionales() {
 }
 
 /* =====================================================
-   RENDER DE RESULTADOS
+   RENDER DE RESULTADOS: se modificó la función por otra
    ===================================================== */
 
-function renderResultado(resultado) {
+/*function renderResultado(resultado) {
   const salida = document.getElementById("salida");
   limpiar(salida);
 
@@ -208,6 +208,7 @@ function renderResultado(resultado) {
 
     <p><b>Estado del informe:</b> ${resultado.estadoInforme}</p>
     <p><b>Total días calendario:</b> ${resultado.totalDias}</p>
+    <p><b>Días totales de atraso:</b> ${resultado.diasCumplimientoAAutoEstado ?? "N/D"}</p>
 
     <h4>💰 Multa</h4>
     <p><b>Año sanción:</b> ${resultado.multa.anioMulta}</p>
@@ -216,8 +217,94 @@ function renderResultado(resultado) {
   `;
 
   // --- Multa en spans (número + letras) ---
-  document.getElementById("multaNumero").textContent = multaFormateada;
-  document.getElementById("multaLetras").textContent = ("en " + monedaALetrasCOP(valorMulta)).toUpperCase();
+  const multaEnLetras = numeroALetrasPesos(valorMulta);
+  document.getElementById("multaLetras").textContent = `${multaEnLetras} (${multaFormateada})`;
+
+  if (resultado.resolucionesAfectadas.length) {
+    salida.innerHTML += `
+      <h4>📜 Resoluciones aplicables</h4>
+      <ul>
+        ${resultado.resolucionesAfectadas.map(r => `<li>${r}</li>`).join("")}
+      </ul>
+    `;
+  }
+}*/
+function formatearFecha(fecha) {
+  if (!fecha) return "N/D";
+  return fecha.toLocaleDateString("es-CO");
+}
+
+function formatearMoneda(valor) {
+  return Number(valor ?? 0).toLocaleString("es-CO", {
+    style: "currency",
+    currency: "COP",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+function renderPreviewProvidencia(resultado, datos) {
+  const preview = document.getElementById("preview");
+  const layout = document.querySelector(".layout");
+
+  if (!preview || !layout) return;
+
+  const f = resultado.fechas;
+  const multa = resultado.multa || {};
+
+  const multaLinea = `${numeroALetrasPesos(multa.valorMulta ?? 0)} (${formatearMoneda(multa.valorMulta)})`;
+  const valorUVB = multa.valorUVB != null ? multa.valorUVB.toFixed(2) : "N/D";
+  const tarifaMulta = formatearMoneda(multa.tarifaUnitaria);
+
+  preview.innerHTML = `
+    <h3>📄 Datos para providencia</h3>
+
+    <div class="preview-card">
+      <p><strong>Fecha de notificación:</strong> ${formatearFecha(datos.fechaNotificacion)}</p>
+      <p><strong>Fecha de la noticia de incumplimiento:</strong> ${formatearFecha(datos.fechaInforme)}</p>
+      <p><strong>Fecha del auto:</strong> ${formatearFecha(datos.fechaAutoInicio)}</p>
+      <p><strong>Fecha de notificación del auto:</strong> ${formatearFecha(f.fechaEstadoAutoInicio)}</p>
+      <p><strong>Fecha límite para cumplir:</strong> ${formatearFecha(f.fechaCumplimiento)}</p>
+      <p><strong>Días totales (cumplimiento a estado auto inicio):</strong> ${resultado.diasCumplimientoAAutoEstado ?? "N/D"}</p>
+      <p><strong>Fecha del plazo máximo para expedir el auto:</strong> ${formatearFecha(f.fechaPlazoMaximoAuto)}</p>
+      <p><strong>Fecha en la que se debió expedir la presente providencia:</strong> ${formatearFecha(f.fechaDebioExpedirseProvidencia)}</p>
+      <p><strong>Valor de la multa:</strong> ${multaLinea}</p>
+      <p><strong>Total días calendario:</strong> ${resultado.totalDias}</p>
+      <p><strong>Año de la multa:</strong> ${multa.anioMulta ?? "N/D"}</p>
+      <p><strong>Valor UVB:</strong> ${valorUVB}</p>
+      <p><strong>Tarifa de la multa:</strong> ${tarifaMulta}</p>
+    </div>
+  `;
+
+  layout.classList.remove("layout-centrado");
+  layout.classList.add("layout-dos-columnas");
+}
+
+function renderResultado(resultado) {
+  const salida = document.getElementById("salida");
+  limpiar(salida);
+
+  const f = resultado.fechas;
+  const valorMulta = Number(resultado?.multa?.valorMulta ?? 0);
+
+  const multaFormateada = valorMulta.toLocaleString("es-CO", {
+    style: "currency",
+    currency: "COP",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+
+  salida.innerHTML = `
+    <h3>📌 Resultado del cómputo</h3>
+
+    <p><b>Ejecutoria:</b> ${f.fechaEjecutoria.toLocaleDateString()}</p>
+    <p><b>Fecha límite obligación condicional:</b> ${f.fechaLimiteObligacion.toLocaleDateString()}</p>
+    <p><b>Fecha cumplimiento (Ddo):</b> ${f.fechaCumplimiento.toLocaleDateString()}</p>
+    <p><b>Fecha límite para noticia (Ddte):</b> ${f.fechaLimiteInforme.toLocaleDateString()}</p>
+    <p><b>Noticia entendido el:</b> ${f.informeEntendido.toLocaleDateString()}</p>
+    <p><b>Estado de la noticia:</b> ${resultado.estadoInforme}</p>
+
+  `;
 
   if (resultado.resolucionesAfectadas.length) {
     salida.innerHTML += `
@@ -228,6 +315,8 @@ function renderResultado(resultado) {
     `;
   }
 }
+
+
 /* =====================================================
    RENDER DE ERRORES DE VALIDACIÓN
    ===================================================== */
@@ -247,7 +336,7 @@ function renderErroresValidacion(errores) {
 /* =====================================================
    EVENTOS DE LOS BOTONES
    ===================================================== */
-
+/*BOTON DE CALCULAR*/
 document.getElementById("btnCalcular").addEventListener("click", () => {
 
     const datos = leerFormulario();
@@ -260,13 +349,17 @@ document.getElementById("btnCalcular").addEventListener("click", () => {
     }
 
     try {
-        resultadoActual = calcularCaso(datos);
-        renderResultado(resultadoActual);
-        renderResumenMensual(resultadoActual.resumenMensualRimbombante);
+         resultadoActual = calcularCaso(datos);
+         renderResultado(resultadoActual);
+         renderPreviewProvidencia(resultadoActual, datosActual); /*SE AGREGA EL PREVIEW DE DATOS*/
+         renderResumenMensual(resultadoActual.resumenMensualRimbombante);
     } catch (error) {
         renderErroresValidacion([error.message]);
     }
 });
+
+
+/*BOTON DE DETALLE*/
 
 document.getElementById("btnDetalle").addEventListener("click", () => {
     if (!resultadoActual) {
@@ -311,22 +404,3 @@ document.getElementById("btnCopiarResumen").addEventListener("click", async () =
     alert("Copiado como texto (fallback).");
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
