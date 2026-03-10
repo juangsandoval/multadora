@@ -11,11 +11,34 @@
 
 <body>
   <main class="layout layout-centrado">
-    <header>
+    <!-- ============================= -->
+    <!-- HEADER -->
+    <!-- ============================= -->
+    <header class="page-header">
       <h2>⚖️ Cómputo de términos judiciales</h2>
     </header>
 
-    <section aria-label="Formulario de cómputo">
+    <!-- ============================= -->
+    <!-- PANEL IZQUIERDO -->
+    <!-- Resultado + Providencia -->
+    <!-- ============================= -->
+    <section class="panel-izquierdo">
+      <section aria-label="Resultados del cómputo">
+        <div id="salida" aria-live="polite"></div>
+        <div id="detalle-calculo" style="display:none;" aria-live="polite"></div>
+      </section>
+
+      <aside id="preview" aria-live="polite">
+        <h3>📄 RESUMEN DEL CÁLCULO</h3>
+        <p>Aquí aparecerán los datos de la providencia.</p>
+      </aside>
+    </section>
+
+    <!-- ============================= -->
+    <!-- PANEL DERECHO -->
+    <!-- Formulario -->
+    <!-- ============================= -->
+    <section class="panel-derecho" aria-label="Formulario de cómputo">
       <form id="formulario" novalidate>
         <!-- ============================= -->
         <!-- 1) NOTIFICACIÓN -->
@@ -26,8 +49,8 @@
           <label>
             Tipo de notificación:
             <select id="tipoNotificacion">
-              <option value="Estados">Estados</option>
-              <option value="Estrados">Estrados</option>
+              <option value="Estados">ESTADO</option>
+              <option value="Estrados">AUDIENCIA</option>
             </select>
           </label>
 
@@ -105,12 +128,12 @@
           <legend>📬 Noticia de incumplimiento</legend>
 
           <label>
-            Días para informar:
+            Días para presentar Noticia:
             <input type="number" id="diasInforme" value="30" min="0" />
           </label>
 
           <label>
-            Fecha del informe:
+            Fecha de la noticia de incumplimiento:
             <input type="date" id="fechaInforme" />
           </label>
         </fieldset>
@@ -152,27 +175,19 @@
       </form>
     </section>
 
-    <aside id="preview" aria-live="polite">
-      <h3>📄 Previsualización</h3>
-      <p>Aquí aparecerá el resumen del cómputo.</p>
-    </aside>
-
-    <hr />
-
     <!-- ============================= -->
-    <!-- SALIDAS -->
+    <!-- TABLA RESUMEN -->
     <!-- ============================= -->
-    <section aria-label="Resultados del cómputo">
-      <div id="salida" aria-live="polite"></div>
-
-      <div id="detalle-calculo" style="display:none;" aria-live="polite"></div>
-      <p><strong>Multa:</strong> <span id="multaNumero"></span></p>
-      <p><strong>Multa (en letras):</strong> <span id="multaLetras"></span></p>
-
+    <section class="panel-tabla" aria-label="Tabla resumen">
       <h4>Resumen mensual del cómputo (días calendario sin suspensión)</h4>
       <button type="button" id="btnCopiarResumen">Copiar tabla</button>
       <div id="resumenMensual" aria-live="polite"></div>
+    </section>
 
+    <!-- ============================= -->
+    <!-- DETALLES -->
+    <!-- ============================= -->
+    <section class="panel-detalles">
       <h4>Detalle término para cumplir (Ddo)</h4>
       <div id="detalleDias" aria-live="polite"></div>
 
@@ -180,64 +195,5 @@
       <div id="detalleDiasInforme" aria-live="polite"></div>
     </section>
   </main>
-
-  <!-- ============================= -->
-  <!-- JS AUXILIAR DE UI (ideal: mover a app.js / ui.js) -->
-  <!-- ============================= -->
-  <script>
-    // Toggle obligación condicional (robusto: lee el checked actual)
-    function refrescarModoCondicional() {
-      const modo = document.querySelector("input[name='modoPlazoCondicional']:checked")?.value;
-      document.getElementById("grupoPlazoCondicionalDias").style.display = (modo === "Días") ? "block" : "none";
-      document.getElementById("grupoPlazoCondicionalFecha").style.display = (modo === "Fecha") ? "block" : "none";
-    }
-    document.querySelectorAll("input[name='modoPlazoCondicional']").forEach(r => r.addEventListener("change", refrescarModoCondicional));
-    refrescarModoCondicional();
-
-    // Toggle cumplimiento (robusto: lee el checked actual)
-    function refrescarModoCumplimiento() {
-      const modo = document.querySelector("input[name='modoPlazoCumplimiento']:checked")?.value;
-      document.getElementById("grupoCumplimientoDias").style.display = (modo === "Días") ? "block" : "none";
-      document.getElementById("grupoCumplimientoFecha").style.display = (modo === "Fecha") ? "block" : "none";
-    }
-    document.querySelectorAll("input[name='modoPlazoCumplimiento']").forEach(r => r.addEventListener("change", refrescarModoCumplimiento));
-    refrescarModoCumplimiento();
-
-    // Autos adicionales
-    document.getElementById("btnAgregarAuto").addEventListener("click", () => {
-      const cont = document.getElementById("autosContainer");
-
-      const autoDiv = document.createElement("div");
-      autoDiv.className = "auto-adicional";
-
-      const labelFechaAuto = document.createElement("label");
-      labelFechaAuto.textContent = "Fecha auto: ";
-      const inputFechaAuto = document.createElement("input");
-      inputFechaAuto.type = "date";
-      inputFechaAuto.className = "fecha-auto";
-      labelFechaAuto.appendChild(inputFechaAuto);
-
-      const labelPlazo = document.createElement("label");
-      labelPlazo.textContent = "Plazo (días hábiles): ";
-      const inputPlazo = document.createElement("input");
-      inputPlazo.type = "number";
-      inputPlazo.min = 0;
-      inputPlazo.value = 0;
-      inputPlazo.className = "plazo-auto";
-      labelPlazo.appendChild(inputPlazo);
-
-      const btnEliminar = document.createElement("button");
-      btnEliminar.type = "button";
-      btnEliminar.textContent = "🗑 Eliminar";
-      btnEliminar.className = "btn-eliminar-auto";
-      btnEliminar.addEventListener("click", () => autoDiv.remove());
-
-      const hr = document.createElement("hr");
-
-      autoDiv.append(labelFechaAuto, labelPlazo, btnEliminar, hr);
-      cont.appendChild(autoDiv);
-    });
-  </script>
 </body>
 </html>
-
